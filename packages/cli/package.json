@@ -1,5 +1,5 @@
 {
-  "name": "architecture-as-memory",
+  "name": "@architecture-as-memory/aam",
   "version": "1.0.0-beta.1",
   "description": "Living cognitive architecture maps for AI coding assistants.",
   "bin": {
