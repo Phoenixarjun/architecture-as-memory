@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "architecture-as-memory"
+version = "1.0.0b5"
+description = "Living cognitive architecture maps for AI coding assistants."
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+authors = [
+    { name = "Naresh B A" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+aam = "aam.cli:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aam"]

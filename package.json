@@ -2,6 +2,7 @@
   "name": "architecture-as-memory-monorepo",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Living cognitive architecture maps for AI coding assistants.",
   "workspaces": [
     "packages/cli",
@@ -13,6 +14,7 @@
     "dev:site": "npm run dev --workspace=apps/site",
     "build:viewer": "npm run build --workspace=packages/viewer",
     "build:cli": "npm run build --workspace=packages/cli",
+    "bundle:all": "node ./scripts/bundle-cross-ecosystem.js",
     "test": "npm test --workspaces"
   },
   "repository": {

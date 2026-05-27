@@ -51,3 +51,9 @@ architecture-test/
 
 # Bundled CLI assets
 packages/cli/viewer/
+
+# Cross-ecosystem bundled JavaScript assets
+packages/python/src/aam/js/
+packages/powershell/js/
+packages/rust/js/
+packages/rust/target/
