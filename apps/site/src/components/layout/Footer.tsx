@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -11,8 +12,13 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
         <div className="flex flex-col gap-3 max-w-sm">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-brand-ember/20 border border-brand-ember/40 flex items-center justify-center">
-              <div className="w-1.5 h-1.5 bg-brand-ember rounded-sm" />
+            <div className="relative w-5 h-5 shrink-0">
+              <Image
+                src="/AAMLogo.png"
+                alt="Architecture-As-Memory Logo"
+                fill
+                className="object-contain"
+              />
             </div>
             <span className="font-sans font-bold text-sm tracking-wide text-white">
               AAM COGNITION

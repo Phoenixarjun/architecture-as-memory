@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { HardHat } from "lucide-react";
+import Image from "next/image";
 
 export function Navbar() {
   return (
@@ -10,8 +10,14 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
         {/* Branding Logo & Name */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 rounded bg-brand-ember/10 border border-brand-ember/30 flex items-center justify-center group-hover:border-brand-ember/60 transition-colors duration-300">
-            <div className="w-2.5 h-2.5 bg-brand-ember rounded-sm group-hover:scale-110 transition-transform duration-300 shadow-[0_0_8px_rgba(255,138,61,0.6)]" />
+          <div className="relative w-6 h-6 shrink-0">
+            <Image
+              src="/AAMLogo.png"
+              alt="Architecture-As-Memory Logo"
+              fill
+              priority
+              className="object-contain group-hover:scale-110 transition-transform duration-300"
+            />
           </div>
           <span className="font-sans font-bold text-base tracking-wide text-white group-hover:text-brand-ember transition-colors duration-200">
             ARCHITECTURE-AS-MEMORY
