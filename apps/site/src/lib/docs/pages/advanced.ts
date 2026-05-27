@@ -114,12 +114,87 @@ Before implementing features:
   {
     slug: 'examples',
     title: 'Examples & Blueprints',
-    description: 'Production-ready cognition graphs and architecture YAML models.',
+    description: 'Production-ready cognition graphs, BEFORE vs AFTER comparisons, and real AI agent failure cases.',
     blocks: [
-      { type: 'h1', content: 'Production Blueprints' },
-      { type: 'p', content: 'Explore pre-configured architecture models that you can drop directly into new codebases.' },
-      { type: 'h2', content: 'Fintech Microservices Blueprint' },
-      { type: 'p', content: 'A standard architecture capturing Core Banking, Authentication, Visa Connectivity, and Fraud Detection pipelines.' }
+      { type: 'h1', content: 'Production Case Studies & Blueprints' },
+      { type: 'p', content: 'Explore how Architecture-as-Memory (AAM) translates abstract cognitive boundaries into operational repository layouts. We look at direct BEFORE vs AFTER comparisons, real agent failure logs, and standard microservice blueprints.' },
+      
+      { type: 'h2', content: '1. BEFORE vs. AFTER (Cognitive Structuring)' },
+      { type: 'p', content: 'Consider a typical high-velocity authorization service modified repeatedly by multiple developers and AI assistants:' },
+      {
+        type: 'code',
+        title: 'Without AAM: File-First Flat Chaos',
+        language: 'text',
+        content: `auth-service/
+├── auth-service-v2/
+├── auth-helper-final/
+├── auth-helper-final-fixed/
+├── auth-token-utils/
+└── auth-token-utils-new/`
+      },
+      { type: 'p', content: 'Developer thought: *"Why do we have four authentication structures? Which one is the active system?"* The AI agent, having no index, simply duplicates whichever folder is nearest to its current working directory.' },
+      
+      { type: 'p', content: 'Here is the exact same system structured under the AAM capabilities contract:' },
+      {
+        type: 'code',
+        title: 'With AAM: Declarative Boundary Anchor',
+        language: 'yaml',
+        content: `feature:
+  id: FEAT-AUTHENTICATION
+  purpose: Unified customer authentication boundary
+  domains:
+    - DOM-GATEWAY
+  components:
+    - COMP-AUTH-SERVICE
+    - COMP-TOKEN-GENERATOR`
+      },
+      { type: 'p', content: 'By establishing a stable, checked YAML contract, the architecture gains an immutable identity. AI sub-agents instantly query `FEAT-AUTHENTICATION` to fetch context, preventing flat directory duplication.' },
+
+      { type: 'h2', content: '2. Real-World AI Agent Failure Logs' },
+      { type: 'p', content: 'In high-velocity repos without structured boundaries, context collapse occurs quietly. Here is an authentic failure path recorded in an unanchored payments repository:' },
+      {
+        type: 'warning',
+        title: 'Context Collapse & Helper Proliferation Log',
+        content: 'Claude generated three distinct systems to solve a single payments retry task: PaymentRetryManager (backend API), RetryPaymentManager (helper script), and PaymentRecoveryService (checkout domain). Because no schema bound them to a shared domain contract, the duplications went unnoticed for 3 days until circular memory leaks brought down the payment gateway.',
+        accent: 'critical'
+      },
+
+      { type: 'h2', content: '3. E-Commerce Platform Blueprint' },
+      { type: 'p', content: 'A complete, production-ready hierarchy modeling a standard microservices e-commerce application using the System → Domains → Features → Components mapping:' },
+      {
+        type: 'code',
+        title: 'system.yaml',
+        language: 'yaml',
+        content: `id: SYS-ECOMMERCE
+name: E-Commerce Retail Core
+description: Cloud-native retail platform with distributed inventory.
+stack:
+  - nextjs
+  - spring-boot
+  - postgresql`
+      },
+      {
+        type: 'code',
+        title: 'domains/checkout.yaml',
+        language: 'yaml',
+        content: `id: DOM-CHECKOUT
+name: Transactional Checkout Domain
+description: Manages active billing pipelines, cart calculations, and shipping.
+ownership: checkout-platform-team`
+      },
+      {
+        type: 'code',
+        title: 'features/cart-management.yaml',
+        language: 'yaml',
+        content: `id: FEAT-CART-MANAGEMENT
+name: Persistent Cart Management
+purpose: Real-time calculation and session locking of shopper items.
+domains:
+  - DOM-CHECKOUT
+components:
+  - COMP-REDIS-CART-CACHE
+  - COMP-CART-API-SERVICE`
+      }
     ]
   },
   {
