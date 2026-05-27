@@ -43,7 +43,24 @@ async function getWatcherServerPath() {
     return devPath;
   }
 
-  throw new Error('AAM Watcher Server could not be located. Ensure the package is correctly installed or built.');
+  const errorMessage = [
+    `AAM Watcher Server could not be located.`,
+    `------------------------------------------------------------------`,
+    `Expected locations checked:`,
+    `  1. Production Path : ${prodPath}`,
+    `  2. Development Path: ${devPath}`,
+    `------------------------------------------------------------------`,
+    `Actionable Fixes:`,
+    `  - If running in a local clone/dev workspace:`,
+    `    Run: 'npm run build' or 'npm run bundle:all' to build all viewer static and server assets first.`,
+    `  - If running globally or inside another project via 'npx':`,
+    `    Your local npm cache might contain a stale or corrupted partial installation.`,
+    `    Force clear the cache and fetch the latest official stable build:`,
+    `    Run: 'npx @architecture-as-memory/aam@latest dev'`,
+    `------------------------------------------------------------------`
+  ].join('\n');
+
+  throw new Error(errorMessage);
 }
 
 const banner = chalk.bold.rgb(255, 138, 61)(`

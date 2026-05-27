@@ -133,6 +133,12 @@ ${markerEnd}\n`;
       }
 
       try {
+        const stat = await fs.stat(filePath);
+        if (!stat.isFile()) {
+          // Skip directory markers from being read/written as files
+          continue;
+        }
+
         let content = await fs.readFile(filePath, 'utf8');
 
         // Check for old AAM markers and remove them first to clean up
