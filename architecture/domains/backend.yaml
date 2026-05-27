@@ -1,0 +1,12 @@
+type: domain
+schema_version: 1
+id: DOM-BACKEND
+name: Backend Domain
+description: Manages logic, databases, and authentication endpoints.
+purpose: |
+  Abstracts core transactional operations, security constraints,
+  and database persistence layers.
+ownership: Backend Team
+created_at: '2026-05-27T00:00:00Z'
+updated_at: '2026-05-27T00:00:00Z'
+last_modified_by: developer

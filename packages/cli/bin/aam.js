@@ -7,6 +7,14 @@ import fs from 'fs-extra';
 import { exec } from 'child_process';
 import { fileURLToPath } from 'url';
 import { bootstrap } from '../src/scaffolder.js';
+import { validateArchitecture } from '../src/validation-engine.js';
+import { runDoctor } from '../src/doctor-engine.js';
+import { installClaudeHook } from '../src/hooks/claude.js';
+import { exportArchitecture } from '../src/exporter.js';
+import { getHeartbeat } from '../src/status-engine.js';
+import { runHashCommand } from '../src/hash-engine.js';
+import { runSnapshotCommand } from '../src/snapshot-engine.js';
+import { getUnifiedHealthReport } from '../src/health-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,10 +46,24 @@ async function getWatcherServerPath() {
   throw new Error('AAM Watcher Server could not be located. Ensure the package is correctly installed or built.');
 }
 
+const banner = chalk.bold.rgb(255, 138, 61)(`
+    ___    ___    ___  ___ 
+   /   |  /   |  /   |/   |
+  / /| | / /| | / /|   /| |
+ / ___ |/ ___ |/ / |  / | |
+/_/  |_/_/  |_/_/  |_/  |_|
+`);
+const subtitle = chalk.bold.gray(`  ARCHITECTURE-AS-MEMORY (AAM) v1.0.0\n`);
+
 program
   .name('aam')
   .description('Architecture-As-Memory: Living cognitive architecture maps for AI coding assistants.')
-  .version('1.0.0');
+  .version('1.0.0')
+  .addHelpText('before', banner + subtitle);
+
+export function showAamBanner() {
+  console.log(banner + subtitle);
+}
 
 program
   .command('init')
@@ -51,6 +73,65 @@ program
       await bootstrap(process.cwd());
     } catch (error) {
       console.error(chalk.red(`\nInitialization failed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('validate')
+  .description('Validate the structural integrity and references of the AAM architecture schemas.')
+  .action(async () => {
+    try {
+      const isValid = await validateArchitecture(process.cwd());
+      process.exit(isValid ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red(`\nValidation crashed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('doctor')
+  .description('Diagnose the cognition health and detect semantic drift in AAM architecture schemas.')
+  .action(async () => {
+    try {
+      const completed = await runDoctor(process.cwd());
+      process.exit(completed ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red(`\nCognitive doctor crashed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('export')
+  .description('Export the current living architecture into a standalone, single-file offline visualizer bundle.')
+  .option('-o, --output <path>', 'Output file name', 'architecture-map.html')
+  .action(async (options) => {
+    try {
+      await exportArchitecture(process.cwd(), options.output);
+    } catch (error) {
+      console.error(chalk.red(`\nExport failed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('hooks <action> <provider>')
+  .description('Install optional post-task instruction hooks. (Initially "install claude" is supported).')
+  .action(async (action, provider) => {
+    try {
+      if (action !== 'install') {
+        console.error(chalk.red(`\nError: Unsupported hook action '${action}'. Did you mean 'install'?`));
+        process.exit(1);
+      }
+      if (provider !== 'claude') {
+        console.error(chalk.red(`\nError: Unsupported hook provider '${provider}'. Initially only 'claude' is supported.`));
+        process.exit(1);
+      }
+      await installClaudeHook(process.cwd());
+    } catch (error) {
+      console.error(chalk.red(`\nHook installation crashed: ${error.message}`));
       process.exit(1);
     }
   });
@@ -100,6 +181,58 @@ program
       });
     } catch (error) {
       console.error(chalk.red(`\nFailed to start server: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('status')
+  .description('Display a quick colorized operational heartbeat of repository cognition health.')
+  .action(async () => {
+    try {
+      showAamBanner();
+      const completed = await getHeartbeat(process.cwd());
+      process.exit(completed ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red(`\nStatus failed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('hash')
+  .description('Calculate a stable, deterministic SHA-256 signature of the current topology.')
+  .action(async () => {
+    try {
+      await runHashCommand(process.cwd());
+    } catch (error) {
+      console.error(chalk.red(`\nHashing failed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('snapshot')
+  .description('Save a snapshot definition of the current topology under .aam/snapshots/.')
+  .action(async () => {
+    try {
+      await runSnapshotCommand(process.cwd());
+    } catch (error) {
+      console.error(chalk.red(`\nSnapshot failed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('health')
+  .description('Compile a unified health dashboard aggregating validation, doctor, git, and performance telemetry.')
+  .action(async () => {
+    try {
+      showAamBanner();
+      const healthy = await getUnifiedHealthReport(process.cwd());
+      process.exit(healthy ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red(`\nHealth compilation failed: ${error.message}`));
       process.exit(1);
     }
   });

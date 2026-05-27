@@ -26,9 +26,11 @@ function ViewerCockpit() {
     edges, 
     isLoading, 
     isSyncing, 
+    activeFocusFilter,
     fetchArchitecture, 
     setupEventSource,
     selectNode,
+    setFocusFilter,
     onNodesChange,
     onEdgesChange
   } = useStore();
@@ -104,8 +106,6 @@ function ViewerCockpit() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => selectNode(null)}
-        fitView
-        fitViewOptions={{ padding: 0.6, maxZoom: 0.65 }}
         minZoom={0.2}
         maxZoom={2}
       >
@@ -135,6 +135,34 @@ function ViewerCockpit() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', pointerEvents: 'auto' }}>
+            {/* Focus Filter Select (Task 9) */}
+            <select
+              value={activeFocusFilter || ''}
+              onChange={(e) => setFocusFilter(e.target.value || null)}
+              style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-surface)',
+                color: 'var(--text-secondary)',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                outline: 'none',
+                transition: 'all 0.2s',
+                pointerEvents: 'auto'
+              }}
+              className="focus-filter-select"
+            >
+              <option value="">🎯 Focus: All Nodes</option>
+              <option value="high-risk">⚠️ High Risk / Critical</option>
+              <option value="evolving">🔄 Evolving Lifecycles</option>
+              <option value="unstable">⚡ Unstable Reliability</option>
+              <option value="frontend-only">🎨 Frontend Only</option>
+              <option value="backend-only">⚙️ Backend Only</option>
+              <option value="deprecated">🚫 Deprecated Nodes</option>
+              <option value="experimental">🧪 Experimental Maturity</option>
+            </select>
+
             {/* Search Trigger */}
             <button
               style={{

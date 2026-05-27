@@ -18,6 +18,7 @@ export const useStore = create<ArchitectureState>((set, get) => ({
   expandedDomainIds: new Set<string>(),
   expandedFeatureIds: new Set<string>(),
   searchTerm: '',
+  activeFocusFilter: null,
   
   nodes: [],
   edges: [],
@@ -103,6 +104,11 @@ export const useStore = create<ArchitectureState>((set, get) => ({
     set({ searchTerm: term });
   },
 
+  setFocusFilter: (filter) => {
+    set({ activeFocusFilter: filter });
+    get().recomputeGraph();
+  },
+
   recomputeGraph: () => {
     const {
       domains,
@@ -111,20 +117,58 @@ export const useStore = create<ArchitectureState>((set, get) => ({
       relationships,
       expandedDomainIds,
       expandedFeatureIds,
-      selectedNodeId
+      selectedNodeId,
+      activeFocusFilter,
+      nodes: currentNodes,
+      edges: currentEdges
     } = get();
 
-    const { nodes, edges } = computeGraphLayout({
+    const { nodes: nextNodes, edges: nextEdges } = computeGraphLayout({
       domains,
       features,
       components,
       relationships,
       expandedDomainIds,
       expandedFeatureIds,
-      selectedNodeId
+      selectedNodeId,
+      activeFocusFilter
     });
 
-    set({ nodes, edges });
+    // Node-level Graph Diffing Engine (Task 6)
+    const currentNodesMap = new Map(currentNodes.map(n => [n.id, n]));
+    const patchedNodes = nextNodes.map(nextNode => {
+      const currentNode = currentNodesMap.get(nextNode.id);
+      if (currentNode) {
+        // If the node expanded state changed, reset its layout position. Otherwise, preserve user dragged/custom coordinates
+        const positionChanged = currentNode.data.isExpanded !== nextNode.data.isExpanded;
+        return {
+          ...currentNode,
+          type: nextNode.type,
+          data: nextNode.data,
+          position: positionChanged ? nextNode.position : (currentNode.position || nextNode.position)
+        };
+      }
+      return nextNode;
+    });
+
+    // Edge-level Graph Diffing Engine (Task 6)
+    const currentEdgesMap = new Map(currentEdges.map(e => [e.id, e]));
+    const patchedEdges = nextEdges.map(nextEdge => {
+      const currentEdge = currentEdgesMap.get(nextEdge.id);
+      if (currentEdge) {
+        return {
+          ...currentEdge,
+          label: nextEdge.label,
+          style: nextEdge.style,
+          animated: nextEdge.animated,
+          className: nextEdge.className,
+          markerEnd: nextEdge.markerEnd
+        };
+      }
+      return nextEdge;
+    });
+
+    set({ nodes: patchedNodes, edges: patchedEdges });
   },
 
   onNodesChange: (changes) => {

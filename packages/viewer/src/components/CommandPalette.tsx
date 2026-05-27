@@ -18,17 +18,73 @@ export const CommandPalette = ({ isOpen, onClose }: { isOpen: boolean; onClose: 
   }, [isOpen]);
 
   // Aggregate all nodes into searchable entries
-  const searchEntries: Array<{ id: string; name: string; type: 'domain' | 'feature' | 'component'; desc: string }> = [];
+  const searchEntries: Array<{ 
+    id: string; 
+    name: string; 
+    type: 'domain' | 'feature' | 'component'; 
+    desc: string;
+    capabilities: string[];
+    enhancements: string[];
+  }> = [];
   
-  domains.forEach(d => searchEntries.push({ id: d.id, name: d.name, type: 'domain', desc: d.description }));
-  features.forEach(f => searchEntries.push({ id: f.id, name: f.name, type: 'feature', desc: f.description }));
-  components.forEach(c => searchEntries.push({ id: c.id, name: c.name, type: 'component', desc: c.description }));
+  domains.forEach(d => searchEntries.push({ 
+    id: d.id, 
+    name: d.name, 
+    type: 'domain', 
+    desc: d.description || '',
+    capabilities: (d as any).capabilities || [],
+    enhancements: ((d as any).enhancements || []).map((e: any) => e.title || '')
+  }));
+  
+  features.forEach(f => searchEntries.push({ 
+    id: f.id, 
+    name: f.name, 
+    type: 'feature', 
+    desc: f.description || '',
+    capabilities: (f as any).capabilities || [],
+    enhancements: ((f as any).enhancements || []).map((e: any) => e.title || '')
+  }));
+  
+  components.forEach(c => searchEntries.push({ 
+    id: c.id, 
+    name: c.name, 
+    type: 'component', 
+    desc: c.description || '',
+    capabilities: (c as any).capabilities || [],
+    enhancements: ((c as any).enhancements || []).map((e: any) => e.title || '')
+  }));
 
-  const filtered = searchEntries.filter(entry => 
-    entry.name.toLowerCase().includes(query.toLowerCase()) ||
-    entry.id.toLowerCase().includes(query.toLowerCase()) ||
-    entry.desc.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = searchEntries.filter(entry => {
+    const q = query.toLowerCase().trim();
+    if (!q) return true;
+    
+    // 1. Direct sub-string match (high priority fields)
+    const nameMatch = entry.name.toLowerCase().includes(q);
+    const idMatch = entry.id.toLowerCase().includes(q);
+    const descMatch = entry.desc.toLowerCase().includes(q);
+    
+    // 2. Index-based match for capabilities and enhancements
+    const capMatch = entry.capabilities.some(cap => cap.toLowerCase().includes(q));
+    const enhMatch = entry.enhancements.some(enh => enh.toLowerCase().includes(q));
+    
+    if (nameMatch || idMatch || descMatch || capMatch || enhMatch) return true;
+    
+    // 3. Simple character-order fuzzy match for names & IDs
+    const fuzzyMatch = (str: string) => {
+      let strIdx = 0;
+      let qIdx = 0;
+      const s = str.toLowerCase();
+      while (strIdx < s.length && qIdx < q.length) {
+        if (s[strIdx] === q[qIdx]) {
+          qIdx++;
+        }
+        strIdx++;
+      }
+      return qIdx === q.length;
+    };
+    
+    return fuzzyMatch(entry.name) || fuzzyMatch(entry.id);
+  });
 
   const handleSelect = (entry: typeof searchEntries[0]) => {
     // 1. Expand the tree paths so the target node becomes visible

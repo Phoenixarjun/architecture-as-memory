@@ -1,0 +1,26 @@
+type: component
+schema_version: 1
+id: COMP-AUTH-SERVICE
+name: Authentication Service
+description: Backend service that validates credentials, handles tokens, and manages sessions.
+purpose: |
+  Centralizes user authentication rules, password crypt operations,
+  and secure JWT session generation.
+domain: DOM-BACKEND
+status:
+  lifecycle: active
+  maturity: production
+  reliability: hardened
+  observability: complete
+  risk: low
+responsibilities:
+  - validates login credentials against database user records
+  - generates secure JWT session tokens with proper expirations
+  - handles token refresh and session revocation requests
+capabilities:
+  - executes sub-millisecond password crypt checks
+  - issues crytographically secure and signed tokens
+  - invalidates active sessions upon logout request
+created_at: '2026-05-27T00:00:00Z'
+updated_at: '2026-05-27T00:00:00Z'
+last_modified_by: developer

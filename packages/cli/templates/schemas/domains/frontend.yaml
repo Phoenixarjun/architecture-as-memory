@@ -1,0 +1,12 @@
+type: domain
+schema_version: 1
+id: DOM-FRONTEND
+name: Frontend Domain
+description: Handles the user interface and frontend components.
+purpose: |
+  Enforces boundaries and coordinates state synchronization between
+  web UI layers and microservice gateways.
+ownership: Frontend Team
+created_at: '2026-05-27T00:00:00Z'
+updated_at: '2026-05-27T00:00:00Z'
+last_modified_by: developer
