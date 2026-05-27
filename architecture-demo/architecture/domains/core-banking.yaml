@@ -1,4 +1,0 @@
-id: DOM-CORE-BANKING
-name: Core Transactions & Auditing
-description: Manages double-entry ledgers, external card network interfaces (Clearing), compliance logging, and real-time operational fraud auditing.
-ownership: Ledger Services Division
