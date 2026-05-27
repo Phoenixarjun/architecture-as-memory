@@ -33,7 +33,7 @@ export function Showcase() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          className="relative max-w-5xl mx-auto rounded-xl overflow-hidden glass-surface border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.7)] group"
+          className="relative max-w-7xl mx-auto rounded-xl overflow-hidden glass-surface border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.7)] group"
         >
           {/* Header Panel Bar inside showcase */}
           <div className="bg-brand-surface-dark/95 border-b border-white/5 px-6 py-3 flex items-center justify-between z-20 relative">
@@ -93,7 +93,7 @@ export function Showcase() {
         </motion.div>
 
         {/* Showcase Bottom Feature Badges */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto pt-6 w-full">
           <div className="flex gap-3 items-start p-4 rounded bg-brand-surface-dark/20 border border-white/5">
             <Eye className="w-4 h-4 text-brand-ember shrink-0 mt-0.5" />
             <div className="flex flex-col gap-1">
