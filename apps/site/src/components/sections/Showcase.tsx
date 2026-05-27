@@ -33,7 +33,7 @@ export function Showcase() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
-          className="relative max-w-7xl mx-auto rounded-xl overflow-hidden glass-surface border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.7)] group"
+          className="relative w-[60vw] mx-auto rounded-xl overflow-hidden glass-surface border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.7)] group"
         >
           {/* Header Panel Bar inside showcase */}
           <div className="bg-brand-surface-dark/95 border-b border-white/5 px-6 py-3 flex items-center justify-between z-20 relative">
