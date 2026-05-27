@@ -1,0 +1,35 @@
+{
+  "name": "architecture-as-memory-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Living cognitive architecture maps for AI coding assistants.",
+  "workspaces": [
+    "packages/cli",
+    "packages/viewer",
+    "apps/site"
+  ],
+  "scripts": {
+    "dev:viewer": "npm run dev --workspace=packages/viewer",
+    "dev:site": "npm run dev --workspace=apps/site",
+    "build:viewer": "npm run build --workspace=packages/viewer",
+    "build:cli": "npm run build --workspace=packages/cli",
+    "test": "npm test --workspaces"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Phoenixarjun/architecture-as-memory.git"
+  },
+  "keywords": [
+    "architecture",
+    "cognitive-map",
+    "developer-tools",
+    "ai-native",
+    "reactflow"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Phoenixarjun/architecture-as-memory/issues"
+  },
+  "homepage": "https://github.com/Phoenixarjun/architecture-as-memory#readme"
+}

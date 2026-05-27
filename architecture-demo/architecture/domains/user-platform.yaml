@@ -1,0 +1,4 @@
+id: DOM-USER-PLATFORM
+name: User & Platform Operations
+description: Coordinates user registration, API gateways, session security, authentication, and event-driven outbound notification channels.
+ownership: Identity Core Team

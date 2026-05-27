@@ -1,0 +1,10 @@
+id: COMP-CLEARING-HOUSE
+name: Batch Clearing Settlement Service
+description: Manages scheduled ACH clearing cycles, external SWIFT payments processing, and batch transactions matching.
+domain: DOM-CORE-BANKING
+status:
+  lifecycle: evolving
+  maturity: beta
+  reliability: baseline
+  observability: complete
+  risk: high

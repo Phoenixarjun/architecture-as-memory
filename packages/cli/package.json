@@ -1,0 +1,19 @@
+{
+  "name": "architecture-as-memory",
+  "version": "1.0.0",
+  "description": "Living cognitive architecture maps for AI coding assistants.",
+  "bin": {
+    "aam": "./bin/aam.js"
+  },
+  "main": "./src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./bin/aam.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "fs-extra": "^11.1.1",
+    "yaml": "^2.3.1"
+  }
+}

@@ -1,0 +1,17 @@
+id: FEAT-CORE-LEDGER
+name: High-Throughput Transaction Core
+description: Processes core double-entry transaction ledgers, card clearing settlement networks, and automated risk scoring audits.
+domains:
+  - DOM-CORE-BANKING
+components:
+  - COMP-LEDGER-CORE
+  - COMP-CLEARING-HOUSE
+  - COMP-VISA-CONNECTOR
+  - COMP-FRAUD-DETECTOR
+  - COMP-AUDIT-LOGGER
+status:
+  lifecycle: completed
+  implementation: production-hardened
+  reliability: hardened
+  observability: complete
+  risk: high

@@ -1,0 +1,10 @@
+id: COMP-AUTH-PROVIDER
+name: Identity JWT Token Provider
+description: Secure core oauth session store. Generates signed JWT web tokens using RS256 algorithm and verifies active sessions.
+domain: DOM-USER-PLATFORM
+status:
+  lifecycle: hardened
+  maturity: mature
+  reliability: hardened
+  observability: complete
+  risk: low

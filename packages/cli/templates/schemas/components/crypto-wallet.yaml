@@ -1,0 +1,10 @@
+id: COMP-CRYPTO-WALLET
+name: HSM Crypto Private Wallet Service
+description: Manages secure private key generation inside Hardware Security Modules (HSM) and signs asset transfers on public chains.
+domain: DOM-USER-PLATFORM
+status:
+  lifecycle: evolving
+  maturity: beta
+  reliability: medium
+  observability: complete
+  risk: critical

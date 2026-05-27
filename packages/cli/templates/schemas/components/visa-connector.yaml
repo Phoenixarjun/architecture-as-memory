@@ -1,0 +1,10 @@
+id: COMP-VISA-CONNECTOR
+name: Visa Clearing Connector
+description: Real-time network transaction clearing interface. Connects core network protocols to standard card clearance pipelines.
+domain: DOM-CORE-BANKING
+status:
+  lifecycle: completed
+  maturity: production
+  reliability: stable
+  observability: baseline
+  risk: medium

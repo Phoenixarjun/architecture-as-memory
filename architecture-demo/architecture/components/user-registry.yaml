@@ -1,0 +1,10 @@
+id: COMP-USER-REGISTRY
+name: Customer Registry Service
+description: Core relational system of record for account profiles, contact metadata, verification states, and encryption settings.
+domain: DOM-USER-PLATFORM
+status:
+  lifecycle: completed
+  maturity: production
+  reliability: stable
+  observability: complete
+  risk: medium
