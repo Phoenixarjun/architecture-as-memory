@@ -1,4 +1,5 @@
 <div align="center">
+
   <img src="./apps/site/public/AAMLogo.png" width="160" alt="Architecture-as-Memory (AAM) Logo"/>
 
   <h1>Architecture-As-Memory (AAM)</h1>
