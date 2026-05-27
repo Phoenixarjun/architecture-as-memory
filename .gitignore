@@ -48,3 +48,6 @@ Thumbs.db
 
 # Core AAM Local Testing files (Ignore during actual package distribution, keep local developer testing clean)
 architecture-test/
+
+# Bundled CLI assets
+packages/cli/viewer/

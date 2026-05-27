@@ -57,6 +57,30 @@ export async function detectProviders(targetDir = process.cwd()) {
     'temp'
   ]);
 
+  // Helper to read file and run semantic heuristics to detect provider
+  const getProviderFromContent = async (filePath) => {
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+      const snippet = content.slice(0, 1500).toLowerCase();
+
+      if (snippet.includes('claude code') || snippet.includes('claude-code')) {
+        return 'claude';
+      }
+      if (snippet.includes('cursor rules') || snippet.includes('cursorrules') || snippet.includes('cursor rule') || snippet.includes('.cursorrules')) {
+        return 'cursor';
+      }
+      if (snippet.includes('gemini cli') || snippet.includes('gemini.md') || snippet.includes('gemini instructions')) {
+        return 'gemini';
+      }
+      if (snippet.includes('github copilot') || snippet.includes('copilot-instructions') || snippet.includes('copilot instructions')) {
+        return 'codex';
+      }
+    } catch {
+      // Ignore read errors
+    }
+    return null;
+  };
+
   // 2. Recursive scan up to depth 3
   async function scanDir(currentDir, depth) {
     if (depth > 3) return;
@@ -81,39 +105,41 @@ export async function detectProviders(targetDir = process.cwd()) {
       } else if (entry.isFile()) {
         const lowerName = entryName.toLowerCase();
         
-        // --- Claude Checks ---
-        if (entryName === 'CLAUDE.md' && (depth === 1 || relativePath === '.claude/CLAUDE.md')) {
-          result.claude.push(fullPath);
-        }
-        
-        // --- Cursor Checks ---
-        else if (entryName === '.cursorrules' && depth === 1) {
-          result.cursor.push(fullPath);
+        // Match rules by filename and case-normalized matching
+        let matchedCategory = null;
+
+        // --- Explicit Provider Matches (Filenames) ---
+        if (lowerName === 'claude.md' && (depth === 1 || relativePath === '.claude/claude.md' || relativePath === '.claude/CLAUDE.md')) {
+          matchedCategory = 'claude';
+        } else if (lowerName === '.cursorrules' && depth === 1) {
+          matchedCategory = 'cursor';
         } else if (lowerName.endsWith('.mdc') && relativePath.startsWith('.cursor/rules/')) {
-          result.cursor.push(fullPath);
+          matchedCategory = 'cursor';
+        } else if (lowerName === 'gemini.md' && (depth === 1 || relativePath === '.gemini/gemini.md' || relativePath === '.gemini/GEMINI.md')) {
+          matchedCategory = 'gemini';
+        } else if (relativePath === '.github/copilot-instructions.md' || lowerName === 'copilot-instructions.md') {
+          matchedCategory = 'codex';
+        } 
+        
+        // --- Fuzzy/Generic Filename Matches ---
+        else if (
+          (lowerName === 'agent.md' ||
+           lowerName === 'agents.md' ||
+           lowerName === 'ai_instructions.md' ||
+           lowerName === 'ai-instructions.md' ||
+           lowerName === 'instructions.md' ||
+           lowerName === 'coder.md' ||
+           lowerName === 'contributing.md') &&
+          depth === 1
+        ) {
+          // Check semantic content to identify provider if any, fallback to generic
+          const semanticProvider = await getProviderFromContent(fullPath);
+          matchedCategory = semanticProvider || 'generic';
         }
 
-        // --- Codex / OpenAI Checks ---
-        else if (entryName === 'AGENTS.md' && depth === 1) {
-          result.codex.push(fullPath);
-        } else if (relativePath === '.github/copilot-instructions.md') {
-          result.codex.push(fullPath);
-        }
-
-        // --- Gemini Checks ---
-        else if (relativePath === '.gemini/GEMINI.md' || (entryName === 'GEMINI.md' && depth === 1)) {
-          result.gemini.push(fullPath);
-        }
-
-        // --- Generic Checks ---
-        else if (entryName === 'AI-INSTRUCTIONS.md' && depth === 1) {
-          result.generic.push(fullPath);
-        } else if (entryName === 'instructions.md' && depth === 1) {
-          result.generic.push(fullPath);
-        } else if (entryName === 'CODER.md' && depth === 1) {
-          result.generic.push(fullPath);
-        } else if (entryName === 'CONTRIBUTING.md' && depth === 1) {
-          result.generic.push(fullPath);
+        // If a category was matched, assign it!
+        if (matchedCategory) {
+          result[matchedCategory].push(fullPath);
         }
       }
     }
