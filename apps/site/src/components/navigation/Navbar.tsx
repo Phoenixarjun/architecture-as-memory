@@ -20,10 +20,13 @@ export function Navbar() {
 
         {/* Navigation links (Desktop) */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="#features" className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-sans">
+          <Link href="/docs" className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-sans">
+            Documentation
+          </Link>
+          <Link href="/#features" className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-sans">
             Features
           </Link>
-          <Link href="#ecosystems" className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-sans">
+          <Link href="/#ecosystems" className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-sans">
             Ecosystems
           </Link>
           <Link href="https://github.com/Phoenixarjun/architecture-as-memory" target="_blank" className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-sans">
@@ -35,7 +38,7 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded bg-brand-surface-dark border border-white/5 font-mono text-[10px] text-brand-ember uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-ember animate-ping shrink-0" />
-            <span>v1.0.0</span>
+            <span>v1.0.1</span>
           </div>
         </div>
       </div>

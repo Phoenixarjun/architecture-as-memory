@@ -47,29 +47,49 @@ export function Showcase() {
             </div>
           </div>
 
-          {/* Screenshot image */}
-          <div className="relative aspect-[16/10] overflow-hidden w-full bg-brand-bg">
-            <Image
-              src="/graph_screenshot.png"
-              alt="Architecture-As-Memory interactive ReactFlow topological graph"
-              fill
-              priority
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-            />
+          {/* Overlapping Premium AAM1 and AAM2 Showcase */}
+          <div className="relative aspect-[16/10] w-full bg-brand-bg flex items-center justify-center p-8 overflow-hidden">
+            {/* Ambient Background Glow inside the frame */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand-bg via-brand-surface-dark/40 to-brand-bg -z-10" />
+            
+            {/* AAM1 Image (Main Background / Left Offset) */}
+            <div className="absolute left-[8%] top-[10%] w-[68%] h-[75%] rounded-lg overflow-hidden border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.6)] group-hover:translate-y-[-5px] transition-transform duration-500">
+              <Image
+                src="/AAM1.png"
+                alt="Architecture-As-Memory system topology view"
+                fill
+                priority
+                className="object-cover"
+              />
+            </div>
+
+            {/* AAM2 Image (Overlapping Foreground / Right Offset) */}
+            <div className="absolute right-[8%] bottom-[10%] w-[58%] h-[68%] rounded-lg overflow-hidden border border-brand-ember/30 shadow-[0_20px_50px_rgba(255,138,61,0.25)] group-hover:translate-y-[5px] transition-transform duration-500 z-10">
+              {/* Glassmorphic border glow overlay */}
+              <div className="absolute inset-0 border border-white/10 pointer-events-none rounded-lg" />
+              <Image
+                src="/AAM2.png"
+                alt="Architecture-As-Memory child feature and component view"
+                fill
+                priority
+                className="object-cover"
+              />
+            </div>
+
             {/* Absolute visual overlay glassmorphism cards on graph */}
-            <div className="absolute bottom-6 left-6 max-w-xs glass-surface p-4 border border-white/10 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+            <div className="absolute bottom-6 left-6 max-w-xs glass-surface p-4 border border-white/10 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-20">
               <div className="flex items-center gap-2 text-brand-ember font-bold text-xs font-sans pb-1.5 border-b border-white/5">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>PROGRESSIVE HYDRATION</span>
               </div>
               <p className="text-[10px] text-white/50 leading-relaxed font-sans mt-1.5">
-                Layout connectors render only when parent domain modules are clicked, avoidingAST graph spaghetti.
+                Layout connectors render only when parent domain modules are clicked, avoiding AST graph spaghetti.
               </p>
             </div>
           </div>
 
           {/* Telemetry frame details */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-bg via-transparent to-transparent h-16 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-bg via-transparent to-transparent h-16 pointer-events-none z-10" />
         </motion.div>
 
         {/* Showcase Bottom Feature Badges */}
