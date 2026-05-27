@@ -40,9 +40,9 @@ export default async function DocSlugPage({ params }: PageProps) {
   }
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
       {/* Primary Content Column */}
-      <div className="lg:col-span-2 flex flex-col gap-6">
+      <div className="lg:col-span-3 flex flex-col gap-6">
         <DocsContent page={page} />
         <PrevNextNavigation currentPage={page} />
       </div>

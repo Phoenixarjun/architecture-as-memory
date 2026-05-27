@@ -46,15 +46,15 @@ export function CognitiveDrift() {
             <ul className="space-y-4 text-xs font-sans text-white/60">
               <li className="flex gap-2.5 items-start">
                 <EyeOff className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                <span>**AST Overwhelm**: Visualizers scan every import statement, rendering unreadable spaghetti lines of 2,000 code nodes.</span>
+                <span><strong className="text-white font-bold">AST Overwhelm</strong>: Visualizers scan every import statement, rendering unreadable spaghetti lines of 2,000 code nodes.</span>
               </li>
               <li className="flex gap-2.5 items-start">
                 <EyeOff className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                <span>**Immediate Obsolescence**: Written Markdown documentations fall out-of-sync the minute your AI agent executes a single patch command.</span>
+                <span><strong className="text-white font-bold">Immediate Obsolescence</strong>: Written Markdown documentations fall out-of-sync the minute your AI agent executes a single patch command.</span>
               </li>
               <li className="flex gap-2.5 items-start">
                 <EyeOff className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                <span>**Lost Rationale**: The team spends hours inside terminal logs or Git diff histories asking *“Why did the agent architecture build this?”*</span>
+                <span><strong className="text-white font-bold">Lost Rationale</strong>: The team spends hours inside terminal logs or Git diff histories asking *“Why did the agent architecture build this?”*</span>
               </li>
             </ul>
           </GlowCard>
@@ -74,15 +74,15 @@ export function CognitiveDrift() {
             <ul className="space-y-4 text-xs font-sans text-white/60">
               <li className="flex gap-2.5 items-start">
                 <Lightbulb className="w-4 h-4 text-brand-ember shrink-0 mt-0.5" />
-                <span>**Capability-First Domain Mapping**: High-level boundaries are modeled contextually, drawing connections only when branches expand.</span>
+                <span><strong className="text-white font-bold">Capability-First Domain Mapping</strong>: High-level boundaries are modeled contextually, drawing connections only when branches expand.</span>
               </li>
               <li className="flex gap-2.5 items-start">
                 <Lightbulb className="w-4 h-4 text-brand-ember shrink-0 mt-0.5" />
-                <span>**Enforced Local Sync**: Simple, immutable YAML files serve as the active schema contract, validated after every single task.</span>
+                <span><strong className="text-white font-bold">Enforced Local Sync</strong>: Simple, immutable YAML files serve as the active schema contract, validated after every single task.</span>
               </li>
               <li className="flex gap-2.5 items-start">
                 <Lightbulb className="w-4 h-4 text-brand-ember shrink-0 mt-0.5" />
-                <span>**Calm Spatial Orientation**: Maintain a perfect spatial roadmap of microservices and dependencies without cognitive fatigue.</span>
+                <span><strong className="text-white font-bold">Calm Spatial Orientation</strong>: Maintain a perfect spatial roadmap of microservices and dependencies without cognitive fatigue.</span>
               </li>
             </ul>
           </GlowCard>

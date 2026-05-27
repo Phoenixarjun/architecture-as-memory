@@ -63,7 +63,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         )}
 
         {/* 4. Center Primary Documentation Pane */}
-        <main className="col-span-1 md:col-span-3 lg:col-span-2 flex flex-col w-full min-w-0">
+        <main className="col-span-1 md:col-span-3 lg:col-span-3 flex flex-col w-full min-w-0">
           <div className="w-full flex-1">
             {children}
           </div>

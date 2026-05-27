@@ -54,7 +54,7 @@ export function Hero() {
             variants={fadeIn("up", 0.1)}
             className="text-base sm:text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl font-sans"
           >
-            AI agents mutate code at machine speed. Without persistent memory boundaries, systems slip into **cognitive drift**—leaving engineers strangers in their own codebases. AAM anchors your mental models in real-time.
+            AI agents mutate code at machine speed. Without persistent memory boundaries, systems slip into <strong className="text-white font-bold">cognitive drift</strong> leaving engineers strangers in their own codebases. AAM anchors your mental models in real-time.
           </motion.p>
         </motion.div>
 

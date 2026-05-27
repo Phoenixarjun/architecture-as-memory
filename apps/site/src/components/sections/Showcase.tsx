@@ -48,12 +48,12 @@ export function Showcase() {
           </div>
 
           {/* Overlapping Premium AAM1 and AAM2 Showcase */}
-          <div className="relative aspect-[16/10] w-full bg-brand-bg flex items-center justify-center p-8 overflow-hidden">
+          <div className="relative aspect-[16/9] w-full bg-brand-bg flex items-center justify-center p-4 overflow-hidden">
             {/* Ambient Background Glow inside the frame */}
             <div className="absolute inset-0 bg-gradient-to-tr from-brand-bg via-brand-surface-dark/40 to-brand-bg -z-10" />
             
             {/* AAM1 Image (Main Background / Left Offset) */}
-            <div className="absolute left-[8%] top-[10%] w-[68%] h-[75%] rounded-lg overflow-hidden border border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.6)] group-hover:translate-y-[-5px] transition-transform duration-500">
+            <div className="absolute left-[3%] top-[4%] w-[82%] h-[86%] rounded-lg overflow-hidden border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.7)] hover:scale-[1.01] hover:z-20 transition-all duration-500">
               <Image
                 src="/AAM1.png"
                 alt="Architecture-As-Memory system topology view"
@@ -64,7 +64,7 @@ export function Showcase() {
             </div>
 
             {/* AAM2 Image (Overlapping Foreground / Right Offset) */}
-            <div className="absolute right-[8%] bottom-[10%] w-[58%] h-[68%] rounded-lg overflow-hidden border border-brand-ember/30 shadow-[0_20px_50px_rgba(255,138,61,0.25)] group-hover:translate-y-[5px] transition-transform duration-500 z-10">
+            <div className="absolute right-[3%] bottom-[4%] w-[72%] h-[76%] rounded-lg overflow-hidden border border-brand-ember/35 shadow-[0_24px_60px_rgba(255,138,61,0.3)] hover:scale-[1.01] hover:z-25 transition-all duration-500 z-10">
               {/* Glassmorphic border glow overlay */}
               <div className="absolute inset-0 border border-white/10 pointer-events-none rounded-lg" />
               <Image
