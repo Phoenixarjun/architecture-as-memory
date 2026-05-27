@@ -16,9 +16,16 @@ export const DomainNode = ({ data }: { data: any }) => {
   const toggleDomain = useStore((state) => state.toggleDomain);
   const selectNode = useStore((state) => state.selectNode);
 
+  const domainColor = data.domainColor || { hex: '#FF8A3D', glow: 'rgba(255,138,61,0.1)' };
+  const borderStyle = {
+    borderLeft: `4px solid ${domainColor.hex}`,
+    boxShadow: data.isActive ? `0 0 18px ${domainColor.hex}` : `0 4px 12px rgba(0,0,0,0.25)`
+  };
+
   return (
     <div 
       className={`aam-node node-domain ${data.isActive ? 'aam-node-active' : ''}`}
+      style={borderStyle}
       onClick={(e) => {
         e.stopPropagation();
         selectNode(data.id);
@@ -65,9 +72,16 @@ export const FeatureNode = ({ data }: { data: any }) => {
   const toggleFeature = useStore((state) => state.toggleFeature);
   const selectNode = useStore((state) => state.selectNode);
 
+  const domainColor = data.domainColor || { hex: '#FF8A3D', glow: 'rgba(255,138,61,0.1)' };
+  const borderStyle = {
+    borderLeft: `3px dashed ${domainColor.hex}`,
+    boxShadow: data.isActive ? `0 0 18px ${domainColor.hex}` : `0 4px 12px rgba(0,0,0,0.25)`
+  };
+
   return (
     <div 
       className={`aam-node node-feature ${data.isActive ? 'aam-node-active' : ''}`}
+      style={borderStyle}
       onClick={(e) => {
         e.stopPropagation();
         selectNode(data.id);
@@ -117,10 +131,17 @@ export const FeatureNode = ({ data }: { data: any }) => {
 export const ComponentNode = ({ data }: { data: any }) => {
   const selectNode = useStore((state) => state.selectNode);
 
+  const domainColor = data.domainColor || { hex: '#FF8A3D', glow: 'rgba(255,138,61,0.1)' };
+  const borderStyle = {
+    borderLeft: `2px solid ${domainColor.hex}`,
+    boxShadow: data.isActive ? `0 0 18px ${domainColor.hex}` : `0 4px 12px rgba(0,0,0,0.25)`,
+    width: '260px'
+  };
+
   return (
     <div 
       className={`aam-node node-component ${data.isActive ? 'aam-node-active' : ''}`}
-      style={{ width: '260px' }}
+      style={borderStyle}
       onClick={(e) => {
         e.stopPropagation();
         selectNode(data.id);
@@ -145,6 +166,43 @@ export const ComponentNode = ({ data }: { data: any }) => {
       </div>
 
       <Handle type="source" position={Position.Right} style={{ background: '#FF8A3D', width: 6, height: 6 }} />
+    </div>
+  );
+};
+
+export const InvalidNode = ({ data }: { data: any }) => {
+  const selectNode = useStore((state) => state.selectNode);
+
+  return (
+    <div 
+      className={`aam-node node-invalid ${data.isActive ? 'aam-node-active' : ''}`}
+      style={{
+        border: '1px solid #EF4444',
+        background: 'rgba(239, 68, 68, 0.05)',
+        boxShadow: data.isActive ? '0 0 16px rgba(239, 68, 68, 0.4)' : '0 0 8px rgba(239, 68, 68, 0.1)',
+        width: '280px'
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        selectNode(data.id);
+      }}
+    >
+      <div className="aam-node-header" style={{ borderBottom: '1px solid rgba(239, 68, 68, 0.2)', paddingBottom: '6px' }}>
+        <span className="aam-node-title" style={{ fontSize: '13.5px', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          ⚠️ Malformed Cognition
+        </span>
+        <span className="aam-node-id" style={{ color: '#EF4444', opacity: 0.8 }}>{data.name}</span>
+      </div>
+
+      <div className="aam-node-desc" style={{ fontSize: '11px', color: '#EF4444', minHeight: '26px', marginTop: '6px', fontFamily: 'monospace' }}>
+        {data.error ? data.error.substring(0, 100) + '...' : 'Syntax Error'}
+      </div>
+
+      <div className="aam-node-footer" style={{ fontSize: '10px', borderTop: 'none', paddingTop: 0 }}>
+        <span style={{ color: '#EF4444', opacity: 0.8, fontSize: '9px', fontFamily: 'monospace' }}>
+          {data.file}
+        </span>
+      </div>
     </div>
   );
 };

@@ -2,6 +2,7 @@ type: feature
 schema_version: 1
 id: FEAT-AUTHENTICATION
 name: Authentication Feature
+summary: Manages user login, registration, and cryptographically signed session tokens.
 description: Coordinates user login, JWT generation, and secure session management.
 purpose: |
   Ensures secure credentials validation and cryptographically signed session tokens

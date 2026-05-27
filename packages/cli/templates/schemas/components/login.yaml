@@ -2,6 +2,7 @@ type: component
 schema_version: 1
 id: COMP-LOGIN
 name: Login UI Component
+summary: A React login form collecting credentials and securing JWT session tokens.
 description: React-based frontend form that collects credentials and communicates with the backend.
 purpose: |
   Collects user credentials, provides client-side sanitization,

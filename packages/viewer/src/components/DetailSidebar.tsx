@@ -6,20 +6,100 @@ export const DetailSidebar = ({ onClose }: { onClose: () => void }) => {
     domains, 
     features, 
     components, 
-    relationships 
+    relationships,
+    invalidNodes
   } = useStore();
 
   if (!selectedNodeId) return null;
 
-  // 1. Identify which record type is active
   const domainNode = domains.find(d => d.id === selectedNodeId);
   const featureNode = features.find(f => f.id === selectedNodeId);
   const componentNode = components.find(c => c.id === selectedNodeId);
+  const invalidNode = invalidNodes ? invalidNodes.find(i => i.id === selectedNodeId) : null;
+
+  const type = domainNode ? 'Domain' 
+             : featureNode ? 'Feature Capability' 
+             : componentNode ? 'Component Service' 
+             : 'Malformed Cognition Node';
+
+  // If this is an invalid node, render a specialized error diagnostic panel
+  if (invalidNode) {
+    return (
+      <div className={`aam-sidebar open`} style={{ borderLeft: '2px solid #EF4444' }}>
+        <div className="sidebar-header" style={{ borderBottom: '1px solid rgba(239, 68, 68, 0.2)' }}>
+          <div className="sidebar-title-area">
+            <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#EF4444', fontWeight: 600 }}>
+              {type}
+            </span>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 700, marginTop: '4px', color: '#EF4444' }}>
+              {invalidNode.name}
+            </h2>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(239, 68, 68, 0.8)' }}>
+              {invalidNode.file}
+            </code>
+          </div>
+          <button className="sidebar-close-btn" onClick={onClose} style={{ color: '#EF4444' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div className="sidebar-body">
+          {/* Diagnostic Exception Section */}
+          <div className="sidebar-section">
+            <span className="sidebar-section-title" style={{ color: '#EF4444' }}>Parsing Exception Diagnostics</span>
+            <div className="sidebar-card" style={{
+              background: 'rgba(239, 68, 68, 0.05)',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
+              fontSize: '12px',
+              fontFamily: 'monospace',
+              lineHeight: '1.6',
+              color: '#FCA5A5',
+              padding: '12px',
+              whiteSpace: 'pre-wrap'
+            }}>
+              {invalidNode.error}
+            </div>
+          </div>
+
+          {/* Raw Contents Section */}
+          {invalidNode.content && (
+            <div className="sidebar-section">
+              <span className="sidebar-section-title">Raw Content Stream</span>
+              <div style={{
+                background: '#07080A',
+                border: '1px solid rgba(255,255,255,0.05)',
+                borderRadius: '8px',
+                padding: '12px',
+                maxHeight: '300px',
+                overflow: 'auto',
+                fontSize: '11px',
+                fontFamily: 'monospace',
+                color: '#B8C0CC',
+                lineHeight: '1.5'
+              }}>
+                <pre style={{ margin: 0 }}>
+                  {invalidNode.content.split('\n').map((line, idx) => (
+                    <div key={idx} style={{ display: 'flex' }}>
+                      <span style={{ width: '28px', color: '#5C6675', userSelect: 'none', textAlign: 'right', paddingRight: '8px' }}>
+                        {idx + 1}
+                      </span>
+                      <span>{line}</span>
+                    </div>
+                  ))}
+                </pre>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   const node = domainNode || featureNode || componentNode;
   if (!node) return null;
-
-  const type = domainNode ? 'Domain' : featureNode ? 'Feature Capability' : 'Component Service';
 
   // 2. Aggregate direct relationships (incoming and outgoing)
   const incoming = relationships.filter(r => r.target === selectedNodeId);
@@ -51,32 +131,52 @@ export const DetailSidebar = ({ onClose }: { onClose: () => void }) => {
       </div>
 
       <div className="sidebar-body">
+        {/* Cognitive Summary (Task 3) */}
+        {node.summary && (
+          <div className="sidebar-section">
+            <span className="sidebar-section-title">Cognitive Summary (What)</span>
+            <div className="sidebar-card" style={{ fontSize: '13px', lineHeight: '1.45', color: '#FFB067', fontStyle: 'italic', background: 'rgba(255, 138, 61, 0.03)', borderLeft: '3px solid #FF8A3D' }}>
+              "{node.summary}"
+            </div>
+          </div>
+        )}
+
+        {/* Purpose (Why) Section */}
+        <div className="sidebar-section">
+          <span className="sidebar-section-title">Architectural Purpose (Why)</span>
+          <div className="sidebar-card" style={{ fontSize: '13.5px', lineHeight: '1.5', color: 'var(--text-secondary)' }}>
+            {node.purpose || <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No purpose statement declared in YAML. Purpose validates WHY this node exists in cognitive space.</span>}
+          </div>
+        </div>
+
         {/* Description Section */}
         <div className="sidebar-section">
           <span className="sidebar-section-title">Cognitive Description</span>
           <div className="sidebar-card" style={{ fontSize: '13.5px', lineHeight: '1.5', color: 'var(--text-secondary)' }}>
-            {node.description}
+            {node.description || <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No descriptive summary declared.</span>}
           </div>
         </div>
 
         {/* Capabilities Section */}
-        {(node as any).capabilities && (node as any).capabilities.length > 0 && (
-          <div className="sidebar-section">
-            <span className="sidebar-section-title">Operational Capabilities</span>
-            <div className="sidebar-card">
+        <div className="sidebar-section">
+          <span className="sidebar-section-title">Operational Capabilities</span>
+          <div className="sidebar-card">
+            {(node as any).capabilities && (node as any).capabilities.length > 0 ? (
               <ul className="capabilities-list" style={{ margin: 0, paddingLeft: '16px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
                 {(node as any).capabilities.map((cap: string, i: number) => (
                   <li key={i} style={{ marginBottom: '4px' }}>{cap}</li>
                 ))}
               </ul>
-            </div>
+            ) : (
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>No active capability rules defined for this node yet.</div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Knowledge Links Section */}
-        {(node as any).knowledge_links && (node as any).knowledge_links.length > 0 && (
-          <div className="sidebar-section">
-            <span className="sidebar-section-title">Knowledge Links</span>
+        <div className="sidebar-section">
+          <span className="sidebar-section-title">Knowledge Links</span>
+          {(node as any).knowledge_links && (node as any).knowledge_links.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {(node as any).knowledge_links.map((link: any, i: number) => (
                 <a
@@ -113,8 +213,12 @@ export const DetailSidebar = ({ onClose }: { onClose: () => void }) => {
                 </a>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="sidebar-card" style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+              No links or instruction mappings attached to this node.
+            </div>
+          )}
+        </div>
 
         {/* Enhancements Section */}
         {(node as any).enhancements && (node as any).enhancements.length > 0 && (

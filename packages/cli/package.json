@@ -1,6 +1,6 @@
 {
   "name": "@architecture-as-memory/aam",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Living cognitive architecture maps for AI coding assistants.",
   "bin": {
     "aam": "./bin/aam.js"
@@ -9,7 +9,8 @@
   "type": "module",
   "scripts": {
     "start": "node ./bin/aam.js",
-    "build": "node ./scripts/build.js"
+    "build": "node ./scripts/build.js",
+    "test": "node --test ./test/cli.test.js"
   },
   "dependencies": {
     "chalk": "^4.1.2",

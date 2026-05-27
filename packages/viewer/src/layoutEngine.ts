@@ -1,15 +1,35 @@
 import { type Node, type Edge, MarkerType } from 'reactflow';
-import { type Domain, type Feature, type Component, type Relationship } from './types';
+import { type Domain, type Feature, type Component, type Relationship, type InvalidNode } from './types';
 
 interface LayoutInput {
   domains: Domain[];
   features: Feature[];
   components: Component[];
   relationships: Relationship[];
+  invalidNodes?: InvalidNode[];
   expandedDomainIds: Set<string>;
   expandedFeatureIds: Set<string>;
   selectedNodeId: string | null;
   activeFocusFilter?: string | null;
+  searchTerm?: string;
+}
+
+// Deterministic Domain Color corridor signature mapping (Task 7)
+const DOMAIN_COLORS = [
+  { name: 'copper', hex: '#D98C3F', glow: 'rgba(217, 140, 63, 0.15)' },
+  { name: 'deep-orange', hex: '#FF8A3D', glow: 'rgba(255, 138, 61, 0.15)' },
+  { name: 'gold', hex: '#FBBF24', glow: 'rgba(251, 191, 36, 0.15)' },
+  { name: 'amber', hex: '#F59E0B', glow: 'rgba(245, 158, 11, 0.15)' },
+  { name: 'coral', hex: '#FF6B6B', glow: 'rgba(255, 107, 107, 0.15)' }
+];
+
+function getDomainColor(domainId: string) {
+  let hash = 0;
+  for (let i = 0; i < domainId.length; i++) {
+    hash = domainId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % DOMAIN_COLORS.length;
+  return DOMAIN_COLORS[index];
 }
 
 export function computeGraphLayout({
@@ -17,16 +37,73 @@ export function computeGraphLayout({
   features,
   components,
   relationships,
+  invalidNodes = [],
   expandedDomainIds,
   expandedFeatureIds,
   selectedNodeId,
-  activeFocusFilter
+  activeFocusFilter,
+  searchTerm
 }: LayoutInput): { nodes: Node[]; edges: Edge[] } {
   const graphNodes: Node[] = [];
   const graphEdges: Edge[] = [];
 
-  // Focus Mode matching helper (Task 9)
-  const isNodeInFocus = (nodeId: string, nodeType: string, rawData: any): boolean => {
+  const visibleNodeIds = new Set<string>();
+
+  // --- 1. Compute Focus/Priority & Search matching neighborhood (Task 5 & 9) ---
+  const getSelectedNeighborhood = () => {
+    const neighborhood = new Set<string>();
+    if (!selectedNodeId) return null;
+    
+    neighborhood.add(selectedNodeId);
+    
+    // Direct relationships
+    relationships.forEach(rel => {
+      if (rel.source === selectedNodeId) neighborhood.add(rel.target);
+      if (rel.target === selectedNodeId) neighborhood.add(rel.source);
+    });
+    
+    // Domain selection neighborhood
+    const dom = domains.find(d => d.id === selectedNodeId);
+    if (dom) {
+      features.forEach(f => {
+        if (f.domains.includes(dom.id)) {
+          neighborhood.add(f.id);
+          f.components.forEach(cId => neighborhood.add(cId));
+        }
+      });
+    }
+    
+    // Feature selection neighborhood
+    const feat = features.find(f => f.id === selectedNodeId);
+    if (feat) {
+      feat.domains.forEach(dId => neighborhood.add(dId));
+      feat.components.forEach(cId => {
+        neighborhood.add(cId);
+        relationships.forEach(rel => {
+          if (rel.source === cId) neighborhood.add(rel.target);
+          if (rel.target === cId) neighborhood.add(rel.source);
+        });
+      });
+    }
+    
+    // Component selection neighborhood
+    const comp = components.find(c => c.id === selectedNodeId);
+    if (comp) {
+      neighborhood.add(comp.domain);
+      features.forEach(f => {
+        if (f.components.includes(comp.id)) {
+          neighborhood.add(f.id);
+          f.domains.forEach(dId => neighborhood.add(dId));
+        }
+      });
+    }
+    
+    return neighborhood;
+  };
+
+  const selectedNeighborhood = getSelectedNeighborhood();
+
+  const isNodeInFocusFilter = (nodeId: string, nodeType: string, rawData: any): boolean => {
     if (!activeFocusFilter) return true;
 
     const isFrontendNode = () => {
@@ -71,14 +148,53 @@ export function computeGraphLayout({
     }
   };
 
-  // --- 1. Deterministic Positioning Tree Layout ---
-  const DOMAIN_GAP_X = 900;
+  const isSearchMatch = (id: string, name: string, desc: string, sum?: string): boolean => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase().trim();
+    return id.toLowerCase().includes(term) || 
+           name.toLowerCase().includes(term) || 
+           desc.toLowerCase().includes(term) || 
+           (sum ? sum.toLowerCase().includes(term) : false);
+  };
+
+  const isNodePrioritized = (id: string, type: string, rawData: any): boolean => {
+    const inFilter = isNodeInFocusFilter(id, type, rawData);
+    const inSearch = isSearchMatch(id, rawData.name || '', rawData.description || '', rawData.summary || '');
+    const inNeighborhood = selectedNeighborhood ? selectedNeighborhood.has(id) : true;
+    return inFilter && inSearch && inNeighborhood;
+  };
+
+  // --- 2. Isolated Malformed Cognition Nodes (Task 1) ---
   const DOMAIN_START_X = 100;
-  const DOMAIN_START_Y = 100;
+  const DOMAIN_START_Y = 320; // Lowered to leave generous space for isolated invalid nodes
 
-  const visibleNodeIds = new Set<string>();
+  if (invalidNodes && invalidNodes.length > 0) {
+    invalidNodes.forEach((inv, invIdx) => {
+      const invX = DOMAIN_START_X + invIdx * 350;
+      const invY = 60; // Clean, isolated header lane
+      visibleNodeIds.add(inv.id);
 
-  // Enterprise-Scale Graph Strategy (Task 10): Chunk-load/lazy-render first 20 domains
+      const isInvSelected = selectedNodeId === inv.id;
+      const isPrioritized = selectedNodeId ? isInvSelected : true;
+
+      graphNodes.push({
+        id: inv.id,
+        type: 'invalidNode',
+        position: { x: invX, y: invY },
+        style: {
+          opacity: isPrioritized ? 1.0 : 0.08,
+          transition: 'opacity 0.2s ease-in-out'
+        },
+        data: {
+          ...inv,
+          isActive: isInvSelected
+        }
+      });
+    });
+  }
+
+  // --- 3. Deterministic Positioning Tree Layout with Dynamic Spacing (Task 4, 6 & 7) ---
+  const DOMAIN_GAP_X = 900;
   const MAX_DOMAINS_RENDER = 20;
   const shouldChunk = domains.length > MAX_DOMAINS_RENDER && !selectedNodeId;
   const domainsToRender = shouldChunk ? domains.slice(0, MAX_DOMAINS_RENDER) : domains;
@@ -88,20 +204,26 @@ export function computeGraphLayout({
     const domY = DOMAIN_START_Y;
 
     const isDomExpanded = expandedDomainIds.has(dom.id);
+    const domainColor = getDomainColor(dom.id);
     visibleNodeIds.add(dom.id);
 
-    // Create Domain Node
-    const isDomFocus = isNodeInFocus(dom.id, 'domainNode', dom);
+    const isDomPrioritized = isNodePrioritized(dom.id, 'domainNode', dom);
+
+    // Create Domain Node with left-glow color corridor accent
     graphNodes.push({
       id: dom.id,
       type: 'domainNode',
       position: { x: domX, y: domY },
-      style: { opacity: isDomFocus ? 1.0 : 0.15, transition: 'opacity 0.2s ease-in-out' },
+      style: {
+        opacity: isDomPrioritized ? 1.0 : 0.08,
+        transition: 'opacity 0.2s ease-in-out'
+      },
       data: {
         ...dom,
+        domainColor,
         isExpanded: isDomExpanded,
         isActive: selectedNodeId === dom.id,
-        isDimmed: !isDomFocus
+        isDimmed: !isDomPrioritized
       }
     });
 
@@ -109,226 +231,161 @@ export function computeGraphLayout({
       // Find features belonging to this domain
       const domainFeatures = features.filter((feat) => feat.domains.includes(dom.id));
       
-      domainFeatures.forEach((feat, featIdx) => {
+      // Dynamic collision prevention tracker
+      let featY = domY + 280;
+
+      domainFeatures.forEach((feat) => {
         const featX = domX + 20;
-        const featY = domY + 240 + featIdx * 260;
         const isFeatExpanded = expandedFeatureIds.has(feat.id);
         visibleNodeIds.add(feat.id);
 
+        const isFeatPrioritized = isNodePrioritized(feat.id, 'featureNode', feat);
+
         // Create Feature Node
-        const isFeatFocus = isNodeInFocus(feat.id, 'featureNode', feat);
         graphNodes.push({
           id: feat.id,
           type: 'featureNode',
           position: { x: featX, y: featY },
-          style: { opacity: isFeatFocus ? 1.0 : 0.15, transition: 'opacity 0.2s ease-in-out' },
+          style: {
+            opacity: isFeatPrioritized ? 1.0 : 0.08,
+            transition: 'opacity 0.2s ease-in-out'
+          },
           data: {
             ...feat,
+            domainColor,
             isExpanded: isFeatExpanded,
             isActive: selectedNodeId === feat.id,
-            isDimmed: !isFeatFocus
+            isDimmed: !isFeatPrioritized
           }
         });
 
+        const featComponents = components.filter((comp) => feat.components.includes(comp.id));
+
         if (isFeatExpanded) {
-          // Find components supporting this feature
-          const featComponents = components.filter((comp) => feat.components.includes(comp.id));
-          
           featComponents.forEach((comp, compIdx) => {
-            const compX = featX + 360;
-            const compY = featY - 80 + compIdx * 200;
+            const compX = featX + 340; // Bounded tight corridor spacing
+            const compY = featY - 40 + compIdx * 140; // Tight localized cluster
             visibleNodeIds.add(comp.id);
 
-            const isCompFocus = isNodeInFocus(comp.id, 'componentNode', comp);
+            const isCompPrioritized = isNodePrioritized(comp.id, 'componentNode', comp);
+
+            // Create Component Node
             graphNodes.push({
               id: comp.id,
               type: 'componentNode',
               position: { x: compX, y: compY },
-              style: { opacity: isCompFocus ? 1.0 : 0.15, transition: 'opacity 0.2s ease-in-out' },
+              style: {
+                opacity: isCompPrioritized ? 1.0 : 0.08,
+                transition: 'opacity 0.2s ease-in-out'
+              },
               data: {
                 ...comp,
+                domainColor,
                 isActive: selectedNodeId === comp.id,
-                isDimmed: !isCompFocus
+                isDimmed: !isCompPrioritized
               }
             });
 
-            // Helper link Feature -> Component
-            const featToCompFocus = isFeatFocus && isCompFocus;
+            // Feature -> Component Structural Link
+            const featToCompFocus = isFeatPrioritized && isCompPrioritized;
             graphEdges.push({
               id: `feat-to-comp-${feat.id}-${comp.id}`,
               source: feat.id,
               target: comp.id,
-              style: { stroke: '#FF8A3D', strokeDasharray: '3,3', strokeWidth: 1, opacity: featToCompFocus ? 1.0 : 0.1 },
-              animated: featToCompFocus
+              style: {
+                stroke: domainColor.hex,
+                strokeDasharray: '3,3',
+                strokeWidth: 1,
+                opacity: featToCompFocus ? 0.7 : 0.05
+              },
+              animated: featToCompFocus && !selectedNodeId
             });
           });
         }
 
-        // Helper link Domain -> Feature
-        const domToFeatFocus = isDomFocus && isFeatFocus;
+        // Domain -> Feature Structural Link
+        const domToFeatFocus = isDomPrioritized && isFeatPrioritized;
         graphEdges.push({
           id: `dom-to-feat-${dom.id}-${feat.id}`,
           source: dom.id,
           target: feat.id,
-          style: { stroke: '#5C6675', strokeWidth: 1.5, opacity: domToFeatFocus ? 1.0 : 0.1 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: domToFeatFocus ? '#5C6675' : 'rgba(92,102,117,0.1)' }
+          style: {
+            stroke: domToFeatFocus ? '#5C6675' : '#1E232B',
+            strokeWidth: 1.5,
+            opacity: domToFeatFocus ? 0.6 : 0.05
+          },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: domToFeatFocus ? '#5C6675' : '#1E232B'
+          }
         });
+
+        // Dynamic coordinate summation to completely prevent features overlapping (Task 6)
+        const clusterHeight = isFeatExpanded ? Math.max(1, featComponents.length) * 140 : 160;
+        featY += clusterHeight + 80; // Sibling normalized spacing + gap
       });
     }
   });
 
-  // --- 2. Cognitive Edge Aggregator Engine ---
+  // --- 4. Progressive & Noise-Capped Semantic Relationship Engine (Task 8 & 11) ---
   const relationsCache = new Set<string>();
+  let semanticEdgeCount = 0;
+  const MAX_SEMANTIC_EDGES = 15;
 
-  // Task 5: Contextual Edge Hydration Filter
-  const hydratedRelationships = relationships.filter((rel) => {
-    const srcId = rel.source;
-    const tgtId = rel.target;
-
-    // Rule 1: If a node is selected, show all its direct and neighboring relationships (within 1 hop)
-    if (selectedNodeId) {
-      if (srcId === selectedNodeId || tgtId === selectedNodeId) return true;
-      
-      const isNeighbor = (nodeId: string) => {
-        const feat = features.find(f => f.id === nodeId);
-        if (feat && (feat.components.includes(selectedNodeId) || feat.domains.includes(selectedNodeId))) return true;
-        
-        const comp = components.find(c => c.id === nodeId);
-        if (comp && (comp.domain === selectedNodeId || features.find(f => f.id === selectedNodeId && f.components.includes(comp.id)))) return true;
-        
-        return false;
-      };
-      if (isNeighbor(srcId) || isNeighbor(tgtId)) return true;
-    }
-
-    // Rule 2: If no node is selected, only render edges where:
-    // Either both source and target are physically visible on the canvas,
-    // OR their parent domains/features are expanded (lazy loading on expansion)
-    const isSrcVisible = visibleNodeIds.has(srcId);
-    const isTgtVisible = visibleNodeIds.has(tgtId);
-
-    if (isSrcVisible && isTgtVisible) return true;
-
-    // Hydrate edges on expansion: if a parent domain/feature of either node is expanded
-    const isParentExpanded = (nodeId: string) => {
-      const comp = components.find(c => c.id === nodeId);
-      if (comp) {
-        if (expandedDomainIds.has(comp.domain)) return true;
-        const parentFeat = features.find(f => f.components.includes(comp.id));
-        if (parentFeat && expandedFeatureIds.has(parentFeat.id)) return true;
-      }
-      const feat = features.find(f => f.id === nodeId);
-      if (feat) {
-        return feat.domains.some(d => expandedDomainIds.has(d));
-      }
-      return false;
-    };
-
-    if (isParentExpanded(srcId) || isParentExpanded(tgtId)) return true;
-
-    return false;
-  });
-
-  const isNodeIdDimmed = (id: string): boolean => {
+  const isNodeIdPrioritized = (id: string): boolean => {
     const node = graphNodes.find(n => n.id === id);
-    return node ? !!node.data.isDimmed : false;
+    return node ? node.style?.opacity === 1.0 : false;
   };
 
-  hydratedRelationships.forEach((rel) => {
+  relationships.forEach((rel) => {
     const srcId = rel.source;
     const tgtId = rel.target;
 
-    // Scenario A: Both nodes visible
-    if (visibleNodeIds.has(srcId) && visibleNodeIds.has(tgtId)) {
-      const edgeId = `edge-${srcId}-${tgtId}`;
-      if (!relationsCache.has(edgeId)) {
-        relationsCache.add(edgeId);
-        const isDimmed = isNodeIdDimmed(srcId) || isNodeIdDimmed(tgtId);
-        const isActive = selectedNodeId === srcId || selectedNodeId === tgtId;
-        graphEdges.push({
-          id: edgeId,
-          source: srcId,
-          target: tgtId,
-          label: rel.description || rel.type,
-          type: 'default',
-          style: { 
-            stroke: isActive ? '#FF8A3D' : '#5C6675', 
-            strokeWidth: isActive ? 2 : 1.5,
-            opacity: isDimmed ? 0.1 : 1.0
-          },
-          animated: isActive && !isDimmed,
-          className: isActive ? 'active' : '',
-          markerEnd: { 
-            type: MarkerType.ArrowClosed, 
-            color: isActive ? '#FF8A3D' : '#5C6675' 
-          }
-        });
-      }
-      return;
+    // Direct neighborhood display OR soft visible state loading
+    const isDirectNeighborhood = selectedNodeId && (srcId === selectedNodeId || tgtId === selectedNodeId);
+    const isBothNodesVisible = visibleNodeIds.has(srcId) && visibleNodeIds.has(tgtId);
+
+    // Rule: Hide secondary edges under caps when no node is selected to keep graph clean
+    if (!selectedNodeId) {
+      if (!isBothNodesVisible) return;
+      if (semanticEdgeCount >= MAX_SEMANTIC_EDGES) return; // Cap relationship clutter
+    } else {
+      // If a node IS selected, only hydrate relationships connected directly to the neighborhood
+      if (!isDirectNeighborhood) return;
     }
 
-    // Scenario B: Aggregated to Features
-    const srcFeatures = features.filter((feat) => feat.components.includes(srcId));
-    const tgtFeatures = features.filter((feat) => feat.components.includes(tgtId));
+    const edgeId = `edge-${srcId}-${tgtId}`;
+    if (!relationsCache.has(edgeId)) {
+      relationsCache.add(edgeId);
+      semanticEdgeCount++;
 
-    let mappedToFeature = false;
+      const isSrcPrioritized = isNodeIdPrioritized(srcId);
+      const isTgtPrioritized = isNodeIdPrioritized(tgtId);
+      const isEdgePrioritized = isSrcPrioritized && isTgtPrioritized;
 
-    for (const sf of srcFeatures) {
-      for (const tf of tgtFeatures) {
-        if (visibleNodeIds.has(sf.id) && visibleNodeIds.has(tf.id)) {
-          const edgeId = `agg-edge-feat-${sf.id}-${tf.id}`;
-          if (!relationsCache.has(edgeId)) {
-            relationsCache.add(edgeId);
-            const isDimmed = isNodeIdDimmed(sf.id) || isNodeIdDimmed(tf.id);
-            graphEdges.push({
-              id: edgeId,
-              source: sf.id,
-              target: tf.id,
-              label: `(${rel.type})`,
-              style: { stroke: '#FFB067', strokeWidth: 1.2, strokeDasharray: '4,4', opacity: isDimmed ? 0.1 : 1.0 },
-              animated: !isDimmed,
-              markerEnd: { type: MarkerType.ArrowClosed, color: isDimmed ? 'rgba(255,176,103,0.1)' : '#FFB067' }
-            });
-          }
-          mappedToFeature = true;
+      const isActive = selectedNodeId === srcId || selectedNodeId === tgtId;
+
+      graphEdges.push({
+        id: edgeId,
+        source: srcId,
+        target: tgtId,
+        label: rel.description || rel.type,
+        type: 'default',
+        style: {
+          stroke: isActive ? '#FF8A3D' : '#3E4856',
+          strokeWidth: isActive ? 2 : 1.2,
+          opacity: isEdgePrioritized ? (isActive ? 1.0 : 0.4) : 0.02
+        },
+        animated: isActive && isEdgePrioritized,
+        className: isActive ? 'active' : '',
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: isActive ? '#FF8A3D' : (isEdgePrioritized ? '#3E4856' : 'rgba(62,72,86,0.05)')
         }
-      }
-    }
-
-    if (mappedToFeature) return;
-
-    // Scenario C: Aggregated to Domains
-    const getParentDomainId = (nodeId: string): string | null => {
-      const directComp = components.find((c) => c.id === nodeId);
-      if (directComp) return directComp.domain;
-
-      const feat = features.find((f) => f.id === nodeId);
-      if (feat && feat.domains.length > 0) return feat.domains[0];
-
-      return null;
-    };
-
-    const srcDomId = getParentDomainId(srcId);
-    const tgtDomId = getParentDomainId(tgtId);
-
-    if (srcDomId && tgtDomId && srcDomId !== tgtDomId) {
-      if (visibleNodeIds.has(srcDomId) && visibleNodeIds.has(tgtDomId)) {
-        const edgeId = `agg-edge-dom-${srcDomId}-${tgtDomId}`;
-        if (!relationsCache.has(edgeId)) {
-          relationsCache.add(edgeId);
-          const isDimmed = isNodeIdDimmed(srcDomId) || isNodeIdDimmed(tgtDomId);
-          graphEdges.push({
-            id: edgeId,
-            source: srcDomId,
-            target: tgtDomId,
-            label: 'coupling',
-            style: { stroke: '#D98C3F', strokeWidth: 1, strokeDasharray: '6,6', opacity: isDimmed ? 0.1 : 1.0 },
-            markerEnd: { type: MarkerType.ArrowClosed, color: isDimmed ? 'rgba(217,140,63,0.1)' : '#D98C3F' }
-          });
-        }
-      }
+      });
     }
   });
 
   return { nodes: graphNodes, edges: graphEdges };
 }
+

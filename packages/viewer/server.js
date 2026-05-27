@@ -56,16 +56,19 @@ export async function getHydratedArchitecture(archDir) {
   const components = [];
   const enhancements = [];
   let relationships = [];
+  const invalidNodes = [];
   
   const idMap = new Map();
 
   for (const filePath of yamlFiles) {
+    const relPath = path.relative(archDir, filePath).replace(/\\/g, '/');
     try {
       const content = await fs.readFile(filePath, 'utf8');
       const parsed = YAML.parse(content);
-      if (!parsed || typeof parsed !== 'object') continue;
+      if (!parsed || typeof parsed !== 'object') {
+        throw new Error('YAML parsed but returned empty or non-object content');
+      }
       
-      const relPath = path.relative(archDir, filePath).replace(/\\/g, '/');
       parsed._relPath = relPath;
 
       // Extract relationships if present
@@ -101,7 +104,16 @@ export async function getHydratedArchitecture(archDir) {
         system = parsed;
       }
     } catch (err) {
-      // Isolate malformed YAML files gracefully to maintain runtime resilience (Task 15)
+      // Isolate malformed YAML files gracefully to maintain runtime resilience (Task 1)
+      const mockId = 'invalid-' + relPath.replace(/[^a-zA-Z0-9]/g, '-');
+      invalidNodes.push({
+        id: mockId,
+        type: 'invalid',
+        name: path.basename(filePath),
+        file: relPath,
+        error: err.message,
+        content: await fs.readFile(filePath, 'utf8').catch(() => '')
+      });
       console.error(chalk.red(`[AAM Discovery] Gracefully isolated malformed file at ${filePath}: ${err.message}`));
     }
   }
@@ -123,7 +135,8 @@ export async function getHydratedArchitecture(archDir) {
     features,
     components,
     enhancements,
-    relationships
+    relationships,
+    invalidNodes
   };
 }
 

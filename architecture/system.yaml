@@ -2,6 +2,7 @@ type: system
 schema_version: 1
 id: SYS-AAM-PROJECT
 name: Minimal Architecture System
+summary: A lightweight architectural context boundary for the system.
 description: A lightweight system designed to anchor AI-native development.
 purpose: |
   Establishes the global system boundary and stack specifications

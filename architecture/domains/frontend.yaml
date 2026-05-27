@@ -2,6 +2,7 @@ type: domain
 schema_version: 1
 id: DOM-FRONTEND
 name: Frontend Domain
+summary: Handles the user interface and presentation layers.
 description: Handles the user interface and frontend components.
 purpose: |
   Enforces boundaries and coordinates state synchronization between

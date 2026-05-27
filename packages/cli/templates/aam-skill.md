@@ -62,6 +62,7 @@ Every AAM YAML schema must include `schema_version: 1`, explicit `type`, dynamic
 schema_version: 1
 id: COMP-[4-HEX-FNV]
 name: Unique Component Name
+summary: Concise 1-3 line cognitive overview of WHAT the component does.
 type: component
 domain: DOM-[4-HEX-FNV]
 purpose: Explains WHY this specific implementation node exists in the system topology.
@@ -139,13 +140,16 @@ Keep your descriptions concise, link wiki sources, stabilize your IDs, and keep 
 
 To protect this living system from entropy under continuous AI mutations, you must adhere strictly to these structural constraints:
 
-1. **Compressed Summaries**: Descriptions must not exceed 250 characters. Keep summaries compressed to maintain a high cognitive density.
-2. **Operational Capability Bullets**: Define components and features using short, action-oriented capabilities. Avoid long paragraphs.
-3. **Architectural Purpose**: Every node must declare a `purpose` explaining *why* it exists in the topological structure rather than *how* it is implemented.
-4. **Immutable Node IDs**: Once generated via the deterministic FNV-1a strategy, never alter a node's ID. All global couplings depend on them.
-5. **Approved Relationship Semantics**: Relationships must only map to the central registry:
-   * `depends_on`, `consumes`, `publishes_to`, `communicates_with`, `reads_from`, `writes_to`, `exposes`, `owned_by`, `triggers`.
-6. **Avoid Duplicate Features/Domains**: Check the graph before creating features or domains. Search for synonyms (e.g. "auth" vs "authentication") to prevent duplicate cognitive maps.
-7. **Eliminate Relationship Spam**: Only document structural, core-level dependency relationships. Do not map every low-level utility import. Keep the topology understandable.
-8. **Protected Fields Integrity**: Respect nodes declaring `protected_fields`. Do not mutate protected properties without explicitly aligning with baseline commits.
-9. **Primary Orchestration Agent Only**: Sub-agents may analyze implementation details but must never mutate architecture cognition directly. Only the primary orchestration agent may write or update architecture YAML nodes. This prevents ontology fragmentation, duplicate mutations, and topology corruption across multi-agent runtimes (such as Claude Desktop sub-agents, Gemini multi-agent workflows, OpenCode task agents, or Codex runtimes).
+1. **Unquoted Colon Safety**: Never write unquoted colons followed by spaces inside text values (e.g. `cache policy (ttl: 3min)`). Doing so breaks YAML parser libraries. Wrap any string value containing colons or colon-space sequences inside double-quotes (e.g. `"cache policy (ttl: 3min)"`) to guarantee safe YAML parsing.
+2. **Cognitive Summary vs Purpose**: Every schema MUST include both:
+   - `summary`: A 1-3 line concise human cognitive compression explaining *what* the node does (under 150 characters).
+   - `purpose`: Explaining *why* the node exists in the topological intent structure.
+3. **Compressed Descriptions**: Descriptions must not exceed 250 characters. Keep summaries compressed to maintain a high cognitive density.
+4. **Operational Capability Bullets**: Define components and features using short, action-oriented capabilities. Avoid long paragraphs.
+5. **Immutable Node IDs**: Once generated via the deterministic FNV-1a strategy, never alter a node's ID. All global couplings depend on them.
+6. **Approved Relationship Semantics**: Relationships must only map to the central registry:
+   - `depends_on`, `consumes`, `publishes_to`, `communicates_with`, `reads_from`, `writes_to`, `exposes`, `owned_by`, `triggers`.
+7. **Avoid Duplicate Features/Domains**: Check the graph before creating features or domains. Search for synonyms (e.g. "auth" vs "authentication") to prevent duplicate cognitive maps.
+8. **Eliminate Relationship Spam**: Only document structural, core-level dependency relationships. Do not map every low-level utility import. Keep the topology understandable.
+9. **Protected Fields Integrity**: Respect nodes declaring `protected_fields`. Do not mutate protected properties without explicitly aligning with baseline commits.
+10. **Primary Orchestration Agent Only**: Sub-agents may analyze implementation details but must never mutate architecture cognition directly. Only the primary orchestration agent may write or update architecture YAML nodes. This prevents ontology fragmentation, duplicate mutations, and topology corruption across multi-agent runtimes (such as Claude Desktop sub-agents, Gemini multi-agent workflows, OpenCode task agents, or Codex runtimes).

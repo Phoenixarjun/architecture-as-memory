@@ -47,15 +47,18 @@ export async function exportArchitecture(targetDir = process.cwd(), outputFilena
   const components = [];
   const enhancements = [];
   let relationships = [];
+  const invalidNodes = [];
   const idMap = new Map();
 
   for (const filePath of yamlFiles) {
+    const relPath = path.relative(targetDir, filePath).replace(/\\/g, '/');
     try {
       const content = await fs.readFile(filePath, 'utf8');
       const parsed = YAML.parse(content);
-      if (!parsed || typeof parsed !== 'object') continue;
+      if (!parsed || typeof parsed !== 'object') {
+        throw new Error('YAML parsed but returned empty or non-object content');
+      }
 
-      const relPath = path.relative(targetDir, filePath).replace(/\\/g, '/');
       parsed._relPath = relPath;
 
       if (Array.isArray(parsed.relationships)) {
@@ -87,7 +90,16 @@ export async function exportArchitecture(targetDir = process.cwd(), outputFilena
         system = parsed;
       }
     } catch (err) {
-      console.warn(chalk.yellow(`[AAM Export] Skipped malformed file: ${filePath} (${err.message})`));
+      const mockId = 'invalid-' + relPath.replace(/[^a-zA-Z0-9]/g, '-');
+      invalidNodes.push({
+        id: mockId,
+        type: 'invalid',
+        name: path.basename(filePath),
+        file: relPath,
+        error: err.message,
+        content: await fs.readFile(filePath, 'utf8').catch(() => '')
+      });
+      console.warn(chalk.yellow(`[AAM Export] Gracefully isolated malformed file: ${filePath} (${err.message})`));
     }
   }
 
@@ -121,7 +133,8 @@ export async function exportArchitecture(targetDir = process.cwd(), outputFilena
     features,
     components,
     enhancements,
-    relationships
+    relationships,
+    invalidNodes
   };
 
   // 2. Generate standalone offline HTML Viewer content

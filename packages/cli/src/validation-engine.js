@@ -120,6 +120,16 @@ export async function validateArchitecture(targetDir = process.cwd(), silent = f
     try {
       if (!(await fs.pathExists(filePath))) continue;
       const content = await fs.readFile(filePath, 'utf8');
+
+      // Check for unquoted unsafe colons inside values (Task 2)
+      const lines = content.split('\n');
+      lines.forEach((line, idx) => {
+        const colonMatch = line.match(/^\s*(purpose|description|summary|name|title|error|message):\s*([^"'>|].*:\s+.*)$/);
+        if (colonMatch) {
+          addWarning(relPath, `Unsafe Unquoted Colon Pattern on line ${idx + 1}`, `Value contains an unquoted colon pattern: "${colonMatch[2].trim()}". Please wrap the entire value in double-quotes to prevent parsing issues.`);
+        }
+      });
+
       const parsed = YAML.parse(content);
       if (!parsed || typeof parsed !== 'object') {
         addError(relPath, 'Parsed YAML content is empty or not an object');
@@ -203,6 +213,11 @@ export async function validateArchitecture(targetDir = process.cwd(), silent = f
     // Common fields
     if (!node.name) {
       addError(relPath, 'Missing "name" field');
+    }
+    if (!node.summary) {
+      addWarning(relPath, 'Missing "summary" field explaining WHAT this node does in 1-3 lines');
+    } else if (node.summary.length > 150) {
+      addWarning(relPath, 'Cognitive summary is too long', 'Keep summary concise (under 150 characters) to ensure clean HUD rendering.');
     }
     if (!node.description) {
       addWarning(relPath, 'Missing "description" summary');

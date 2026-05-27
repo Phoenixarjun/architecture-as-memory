@@ -65,35 +65,35 @@ Relationships are contextual, directional topologies (e.g. `communicates_with`, 
 Initialize AAM directly inside your project root:
 ```bash
 # Initialize cognition folders and detect active AI systems
-npx architecture-as-memory init
+npx @architecture-as-memory/aam init
 ```
 
 ### CLI Commands
 
 ```bash
 # Display a quick colorized operational heartbeat of repository cognition health
-npx architecture-as-memory status
+npx @architecture-as-memory/aam status
 
 # Compile a unified health dashboard aggregating validation, doctor, git, and performance telemetry
-npx architecture-as-memory health
+npx @architecture-as-memory/aam health
 
 # Validate AAM schema syntax, duplicate IDs, and broken references
-npx architecture-as-memory validate
+npx @architecture-as-memory/aam validate
 
 # Audit cognitive health (detect circular dependencies, feature explosion, naming synonym drift)
-npx architecture-as-memory doctor
+npx @architecture-as-memory/aam doctor
 
 # Calculate a stable, format-insensitive SHA-256 signature of the current topology
-npx architecture-as-memory hash
+npx @architecture-as-memory/aam hash
 
 # Save a snapshot definition of the current topology under .aam/snapshots/
-npx architecture-as-memory snapshot
+npx @architecture-as-memory/aam snapshot
 
 # Export the current living architecture into a standalone, single-file offline visualizer bundle
-npx architecture-as-memory export -o architecture-map.html
+npx @architecture-as-memory/aam export -o architecture-map.html
 
 # Start the local YAML watcher server and open the interactive architecture map
-npx architecture-as-memory dev
+npx @architecture-as-memory/aam dev
 ```
 
 ---

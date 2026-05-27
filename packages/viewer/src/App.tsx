@@ -8,7 +8,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 import { useStore } from './store';
-import { DomainNode, FeatureNode, ComponentNode } from './components/CustomNodes';
+import { DomainNode, FeatureNode, ComponentNode, InvalidNode } from './components/CustomNodes';
 import { DetailSidebar } from './components/DetailSidebar';
 import { CommandPalette } from './components/CommandPalette';
 import { InstructionsModal } from './components/InstructionsModal';
@@ -16,7 +16,8 @@ import { InstructionsModal } from './components/InstructionsModal';
 const nodeTypes = {
   domainNode: DomainNode,
   featureNode: FeatureNode,
-  componentNode: ComponentNode
+  componentNode: ComponentNode,
+  invalidNode: InvalidNode
 };
 
 function ViewerCockpit() {

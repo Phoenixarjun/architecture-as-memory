@@ -2,6 +2,7 @@ type: domain
 schema_version: 1
 id: DOM-BACKEND
 name: Backend Domain
+summary: Manages logic, databases, and microservices logic.
 description: Manages logic, databases, and authentication endpoints.
 purpose: |
   Abstracts core transactional operations, security constraints,

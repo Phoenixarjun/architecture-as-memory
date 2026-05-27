@@ -4,6 +4,7 @@ export interface System {
   id: string;
   name: string;
   description: string;
+  summary?: string;
   type?: string;
   schema_version?: number;
   purpose?: string;
@@ -23,6 +24,7 @@ export interface Domain {
   id: string;
   name: string;
   description: string;
+  summary?: string;
   type?: string;
   schema_version?: number;
   purpose?: string;
@@ -39,6 +41,7 @@ export interface Feature {
   id: string;
   name: string;
   description: string;
+  summary?: string;
   type?: string;
   schema_version?: number;
   purpose?: string;
@@ -66,6 +69,7 @@ export interface Component {
   id: string;
   name: string;
   description: string;
+  summary?: string;
   type?: string;
   schema_version?: number;
   purpose?: string;
@@ -86,6 +90,15 @@ export interface Component {
   last_modified_by?: string;
 }
 
+export interface InvalidNode {
+  id: string;
+  type: string;
+  name: string;
+  file: string;
+  error: string;
+  content?: string;
+}
+
 export interface Relationship {
   source: string;
   target: string;
@@ -99,6 +112,7 @@ export interface ArchitectureState {
   features: Feature[];
   components: Component[];
   relationships: Relationship[];
+  invalidNodes: InvalidNode[];
   
   isLoading: boolean;
   isSyncing: boolean;

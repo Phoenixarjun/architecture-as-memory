@@ -11,6 +11,7 @@ export const useStore = create<ArchitectureState>((set, get) => ({
   features: [],
   components: [],
   relationships: [],
+  invalidNodes: [],
   
   isLoading: true,
   isSyncing: false,
@@ -33,6 +34,7 @@ export const useStore = create<ArchitectureState>((set, get) => ({
         features: data.features || [],
         components: data.components || [],
         relationships: data.relationships || [],
+        invalidNodes: data.invalidNodes || [],
         isLoading: false
       });
       get().recomputeGraph();
@@ -58,6 +60,7 @@ export const useStore = create<ArchitectureState>((set, get) => ({
           features: data.features || [],
           components: data.components || [],
           relationships: data.relationships || [],
+          invalidNodes: data.invalidNodes || [],
           isSyncing: false
         });
         get().recomputeGraph();
@@ -102,6 +105,7 @@ export const useStore = create<ArchitectureState>((set, get) => ({
 
   setSearchTerm: (term) => {
     set({ searchTerm: term });
+    get().recomputeGraph();
   },
 
   setFocusFilter: (filter) => {
@@ -115,10 +119,12 @@ export const useStore = create<ArchitectureState>((set, get) => ({
       features,
       components,
       relationships,
+      invalidNodes,
       expandedDomainIds,
       expandedFeatureIds,
       selectedNodeId,
       activeFocusFilter,
+      searchTerm,
       nodes: currentNodes,
       edges: currentEdges
     } = get();
@@ -128,10 +134,12 @@ export const useStore = create<ArchitectureState>((set, get) => ({
       features,
       components,
       relationships,
+      invalidNodes,
       expandedDomainIds,
       expandedFeatureIds,
       selectedNodeId,
-      activeFocusFilter
+      activeFocusFilter,
+      searchTerm
     });
 
     // Node-level Graph Diffing Engine (Task 6)
