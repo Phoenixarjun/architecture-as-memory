@@ -157,5 +157,5 @@ ${markerEnd}\n`;
   }
 
   console.log(chalk.bold.green('\n🎉 Architecture-As-Memory successfully initialized!'));
-  console.log(chalk.white('You can now run "aam dev" to start the local visual viewer.'));
+  console.log(chalk.white('You can now run "npx aam dev" (or globally install: npm i -g @architecture-as-memory/aam then "aam dev") to start the local visual viewer.\n'));
 }
