@@ -1,6 +1,6 @@
 {
   "name": "architecture-as-memory",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "Living cognitive architecture maps for AI coding assistants.",
   "bin": {
     "aam": "./bin/aam.js"
@@ -15,5 +15,32 @@
     "commander": "^11.0.0",
     "fs-extra": "^11.1.1",
     "yaml": "^2.3.1"
-  }
+  },
+  "keywords": [
+    "architecture",
+    "ai",
+    "cognition",
+    "reactflow",
+    "yaml",
+    "developer-tools",
+    "software-architecture",
+    "claude-code",
+    "cursor",
+    "codex",
+    "llm",
+    "agentic-ai",
+    "ai-native",
+    "graph-visualization"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates",
+    "LICENSE",
+    "README.md"
+  ]
 }
