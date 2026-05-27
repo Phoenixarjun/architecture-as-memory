@@ -1,171 +1,269 @@
-# Architecture-As-Memory (AAM)
+<div align="center">
+  <img src="./apps/site/public/AAMLogo.png" width="160" alt="Architecture-as-Memory (AAM) Logo"/>
 
-```
-    ___    ___    ___  ___ 
-   /   |  /   |  /   |/   |
-  / /| | / /| | / /|   /| |
- / ___ |/ ___ |/ / |  / | |
-/_/  |_/_/  |_/_/  |_/  |_|
-  ARCHITECTURE-AS-MEMORY (AAM) v1.0.0
-```
+  <h1>Architecture-As-Memory (AAM)</h1>
 
-An offline, local-first cognition scaffolding system designed to capture, visualize, and sustain architectural boundaries in AI-native software repositories.
+  <p><b>An offline, local-first cognition scaffolding system designed to capture, visualize, and sustain architectural boundaries in high-velocity AI-native software repositories.</b></p>
 
-AAM acts as a living memory layer that anchors both human developers and AI agents to the structural boundaries of a system, preventing architectural erosion and cognitive drift.
+  <p>
+    <img src="https://img.shields.io/badge/System-AI--Native%20Cognition-6366F1?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Scaffolding-Intent%20Preservation-8B5CF6?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Privacy-Offline--First%20Graph-22C55E?style=for-the-badge" />
+  </p>
 
----
+  <p>
+    <img src="https://img.shields.io/badge/CLI-TypeScript%20%2B%20Rust-ED8B00?style=flat-square&logo=typescript&logoColor=white" />
+    <img src="https://img.shields.io/badge/Claude_Code-Optimized-black?style=flat-square&logo=anthropic&logoColor=white" />
+    <img src="https://img.shields.io/badge/Cursor-Supported-00ADD8?style=flat-square" />
+    <img src="https://img.shields.io/badge/Gemini_CLI-Compatible-4285F4?style=flat-square&logo=googlegemini&logoColor=white" />
+  </p>
 
-## 1. The Core Philosophy
+  <p>
+    <img src="https://img.shields.io/badge/npm_package-1.0.0--beta.2-CB3837?style=flat-square&logo=npm&logoColor=white" />
+    <img src="https://img.shields.io/badge/PyPI-wrapper-3776AB?style=flat-square&logo=python&logoColor=white" />
+    <img src="https://img.shields.io/badge/Crates.io-binary-black?style=flat-square&logo=rust&logoColor=white" />
+    <img src="https://img.shields.io/badge/Docker-validated-2496ED?style=flat-square&logo=docker&logoColor=white" />
+  </p>
 
-### The Cognitive Drift Problem
-In AI-native repositories, code mutation occurs at unprecedented velocities. While AI agents can generate hundreds of lines of correct implementation code in seconds, the human mental model of the codebase degrades rapidly. 
+  <br/>
 
-Without a lightweight, structured anchor:
-1. **Context Window Saturation**: Agents treat the entire codebase as an amorphous text block, leading to flat files, duplicate implementations, or circular dependencies.
-2. **Mental Drift**: Human engineers lose track of *why* components are structured a certain way, leading to high architectural friction.
-3. **Decay of Intent**: Critical design decisions are lost in transient chat windows instead of being persisted.
+  <a href="#-why-this-project-exists">Why AAM Exists</a> •
+  <a href="#%EF%B8%8F-how-it-works">How It Works</a> •
+  <a href="#-before-vs-after-cognitive-scaffolding">Before vs. After</a> •
+  <a href="#-high-velocity-ai-anti-patterns">AI Anti-Patterns</a> •
+  <a href="#-declarative-yaml-schema-spec">YAML Schemas</a> •
+  <a href="#-command-line-interface">CLI Specs</a> •
+  <a href="#-quick-start">Quick Start</a>
 
-### How AAM Differs from Existing Tools
-
-| Dimension | AAM | LLM Wiki Systems | Dependency Graphs |
-| :--- | :--- | :--- | :--- |
-| **Primary Unit** | Architectural Intent & Capability | Long-form Technical Prose | AST Imports / File Topology |
-| **Main Consumer** | Dual (AI Agents & Humans) | Humans Only | Build Systems & Linters |
-| **Mutation Rate** | Incremental / Low churn | Infrequent / Out of date | Volatile / Automated |
-| **Focus** | "Why is this system here?" | "How do I configure this?" | "Which file imports another?" |
-
-*   **Unlike a Dependency Graph**: AAM is *not* a file-to-file AST import parser. Physical imports change too rapidly and contain high noise. AAM represents a developer's high-level mental model.
-*   **Unlike an LLM Wiki**: It is not written in free-form prose. Free-form prose is expensive for LLMs to read and difficult to validate. AAM uses structured, highly compressed YAML nodes that are immediately actionable.
-
----
-
-## 2. The Architectural Cognition Model
-
-AAM organizes codebase understanding into exactly four local, structured layers:
-
-```
-  System (system.yaml)
-    → Domains (domains/*.yaml)
-        → Features / Capabilities (features/*.yaml)
-            → Components / Services (components/*.yaml)
-```
-
-1. **System**: The global, top-level identity, description, and stack characteristics of the repository.
-2. **Domains**: High-level business or technical boundaries (e.g., `Frontend`, `Backend`, `Data-Ingestion`). 
-3. **Features (The Capability Anchor)**: Cross-cutting business goals that developers actually reason about (e.g., `Authentication`, `Invoice-Generation`). Features are shared cognition units across domains.
-4. **Components**: The modular units of service, UI views, databases, or frameworks that exist *solely to support features* (e.g., `login-ui-component`, `auth-api-service`).
-
-Relationships are contextual, directional topologies (e.g. `communicates_with`, `consumes`, `publishes_to`) defined globally or locally.
+</div>
 
 ---
 
-## 3. CLI Reference & Installation
+> **"LLM Wiki gives your AI agent memory.**  
+> **AAM gives YOU memory."**
 
-### Installation
-Initialize AAM directly inside your project root:
+In AI-native repositories, code modification occurs at machine speed. While autonomous agents can generate thousands of lines of code in seconds, the human mental model of the codebase degrades rapidly. AAM acts as a local-first architectural memory layer, anchoring both human developers and AI assistants to strict capability boundaries to prevent silent decay.
+
+---
+
+## 🎯 Why This Project Exists
+
+Most software tools show the **happy path of AI code generation**. AAM was built to resolve what happens when autonomous execution scales.
+
+The core engineering questions this project answers:
+- **How do you maintain architectural coherence** when autonomous agents modify code faster than humans can review it?
+- **How do you prevent context window saturation** where LLMs rewrite existing modules because they cannot see high-level logical domains?
+- **How do you enforce spatial integrity** in a repository without using heavy cloud databases or complex visual setups?
+
+### The Moment of Failure
+
+Without a structured capability boundary, autonomous agents select the path of least resistance: generating duplicate utilities inside the nearest folder. In an unanchored repository, three separate autonomous agent runs generated three separate billing handlers within 72 hours:
+
+*   `PaymentRetryManager` (Core backend API)
+*   `RetryPaymentManager` (Helper script in utils)
+*   `PaymentRecoveryService` (Checkout domain wrapper)
+
+All three solved the exact same recovery logic. None shared state or interfaces. Because they sat under a flat AST file system, the duplication went unnoticed until circular memory cycles crashed the production gateway.
+
+**AAM resolves this asymmetric velocity. It ensures that humans and agents reason about software at the capability scale—not flat files.**
+
+---
+
+## 🏗️ How It Works
+
+AAM models repository architecture into four strict hierarchical layers: **System → Domains → Features → Components**. 
+
+<div align="center">
+  <br/>
+  <h3>1. Core Topology Graph (Connected Layout)</h3>
+  <img src="./apps/site/public/AAM1.png" alt="AAM Topology Graph" width="850" style="border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"/>
+  <p><i>The visual watcher console (aam dev) displaying interactive modular relationships, capability shapes, and structural paths.</i></p>
+  
+  <br/>
+  <h3>2. Focused Node Telemetry & Risk Overlays</h3>
+  <img src="./apps/site/public/AAM2.png" alt="AAM Focused Node Details" width="850" style="border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);"/>
+  <p><i>Focused inspection overlay showing strict metadata fields, ownership parameters, and component dependencies dynamically scanned from local YAML models.</i></p>
+  <br/>
+</div>
+
+### Dual-Consumption Scaffolding
+
+1. **Declarative Contracts** — High-level architecture is declared in simple, validated local YAML nodes under the `/architecture` directory.
+2. **Dynamic Ingestion** — During CLI compilation, AAM transforms these declarations into a unified memory graph.
+3. **AI Rule Injection** — During `aam init`, lightweight bootstrap markers are injected into active assistant instructions (e.g. `CLAUDE.md`, `.cursorrules`), forcing the agent to query the index before mutating code.
+
+---
+
+## 🔀 Before vs. After (Cognitive Scaffolding)
+
+### Without AAM: File-First Flat Chaos
+
+LLMs reason about files as unstructured blobs of text. When context limits grow, circular couplings form silently:
+
+```text
+auth-service/
+├── auth-helper-final.js
+├── auth-helper-final-fixed.js
+├── auth-token-utils.js
+└── auth-token-utils-new.js
+```
+*Developer thought: "Which file is authenticating user transactions? Why did Claude generate an entirely new token generator in a subdirectory?"*
+
+---
+
+### With AAM: Declarative Boundary Anchor
+
+AAM models the capability, separating physical file placement from transactional responsibilities:
+
+```yaml
+feature:
+  id: FEAT-AUTHENTICATION
+  purpose: Unified customer authentication boundary
+  domains:
+    - DOM-GATEWAY
+  components:
+    - COMP-AUTH-SERVICE
+    - COMP-TOKEN-GENERATOR
+```
+*AI sub-agents instantly query `FEAT-AUTHENTICATION` to fetch context, identifying exactly where to inject updates without spawning files.*
+
+---
+
+## 🧩 High-Velocity AI Anti-Patterns
+
+| Anti-Pattern | Core Symptom | AAM Prevention Mechanism |
+|--------------|--------------|-------------------------|
+| **Helper Explosion** | Proliferation of `utils-new`, `helper-final` inside sibling directories. | Mandatory component maps bound to strict feature IDs. |
+| **Context Collapse** | AI couples the database layer directly to endpoints, bypassing business modules. | Dependency validation checks fail immediately during CLI compilation. |
+| **Repo Map Overload** | Feeding LLMs flat 400-file directory listings, wasting tokens and diluting context. | Compressed, structured YAML capabilities sent to the agent's system prompt. |
+| **Documentation Entropy** | Long-form wikis and markdown architecture specifications drift silently. | Local YAML schemas are validated offline against the active AST. |
+
+---
+
+## ⚙️ Declarative YAML Schema Spec
+
+AAM structures system blueprints into single-responsibility YAML configurations under `/architecture`.
+
+### 1. system.yaml (Global Parameters)
+```yaml
+id: SYS-ORCHESTRIX
+name: Orchestrix Core Platform
+description: Distributed multi-agent billing and transactional platform.
+stack:
+  - nextjs
+  - spring-boot
+  - python-fastapi
+```
+
+### 2. domains/checkout.yaml (Logical Boundaries)
+```yaml
+id: DOM-CHECKOUT
+name: Transactional Checkout Domain
+description: Handles cart processing, inventory ledger, and payments.
+ownership: checkout-team
+```
+
+### 3. features/cart-management.yaml (Business Capabilities)
+```yaml
+id: FEAT-CART-MANAGEMENT
+name: Shopper Cart Sessions
+purpose: Real-time calculation and item locking of active buyer transactions.
+domains:
+  - DOM-CHECKOUT
+components:
+  - COMP-REDIS-CART-CACHE
+  - COMP-CART-API-SERVICE
+```
+
+---
+
+## 💻 Command Line Interface
+
+AAM features a zero-dependency, local-first CLI tool to manage cognition graphs.
+
+| Command | Action | Output / Behavior |
+|---------|--------|-------------------|
+| `aam init` | Bootstraps AAM, scans AI assistants, injects prompt scaffolds. | Detects rule files (`CLAUDE.md`, `AGENT.md`) and updates boundaries. |
+| `aam dev` | Starts local watcher and hydrates interactive graph. | Launches graphical visual console at `http://localhost:4200` with telemetry. |
+| `aam check` | Validates YAML schemas against structural constraints. | Errors out with line details on malformed YAML or broken relationships. |
+| `aam doctor` | Self-diagnoses cognitive smells in active repository code. | Reports unmapped files, duplicate helpers, and boundary bypasses. |
+
+---
+
+## 🚀 Quick Start
+
+Initialize and launch the interactive visual viewer inside your active repository in under 60 seconds.
+
+### Prerequisites
+* Node.js v18.0.0 or higher
+* npm, yarn, or pnpm
+
+### 1. Bootstrap Scaffolding
+Run the initialization command in your repository root. AAM will automatically scan your project for active AI engines and set up lightweight rules:
 ```bash
-# Initialize cognition folders and detect active AI systems
-npx architecture-as-memory init
+npx @architecture-as-memory/aam@latest init
+```
+*Expected output:*
+```text
+🔍 Running AI Provider Detection Engine...
+  Found compatible files for Claude Code:
+    - CLAUDE.md
+  💡 Capabilities: Instruction Files [Yes], Hooks [No], Slash Commands [Yes]
+
+🎉 Architecture-As-Memory successfully initialized!
 ```
 
-### CLI Commands
-
+### 2. Launch Visualizer Dashboard
+Start the repository watcher to map and track active files:
 ```bash
-# Display a quick colorized operational heartbeat of repository cognition health
-npx architecture-as-memory status
-
-# Compile a unified health dashboard aggregating validation, doctor, git, and performance telemetry
-npx architecture-as-memory health
-
-# Validate AAM schema syntax, duplicate IDs, and broken references
-npx architecture-as-memory validate
-
-# Audit cognitive health (detect circular dependencies, feature explosion, naming synonym drift)
-npx architecture-as-memory doctor
-
-# Calculate a stable, format-insensitive SHA-256 signature of the current topology
-npx architecture-as-memory hash
-
-# Save a snapshot definition of the current topology under .aam/snapshots/
-npx architecture-as-memory snapshot
-
-# Export the current living architecture into a standalone, single-file offline visualizer bundle
-npx architecture-as-memory export -o architecture-map.html
-
-# Start the local YAML watcher server and open the interactive architecture map
-npx architecture-as-memory dev
+npx @architecture-as-memory/aam dev
 ```
+*Expected output:*
+```text
+Starting AAM Watcher Server...
+⏱ Local Telemetry: Hydrated 16 nodes and 12 relationships in 124ms.
+📺 Visualizer dashboard live at: http://localhost:4200
+```
+Open **`http://localhost:4200`** in your browser to inspect your codebase's live visual cognitive topology.
 
 ---
 
-## 4. Multi-Agent Governance Model
+## 🤖 AI Assistant Integration & Governance
 
-In multi-agent environments or multi-tool runtimes (such as Claude Desktop sub-agents, Gemini multi-agent workflows, OpenCode task agents, or Codex runtimes), ontology consistency and graph stability are protected by a strict governance rule:
+### The Rule Injection Scaffold
 
-> ⚠️ **CRITICAL AI GOVERNANCE RULE**: ONLY THE PRIMARY ORCHESTRATION AGENT MAY WRITE OR UPDATE ARCHITECTURE COGNITION DIRECTLY. Sub-agents may analyze implementation details but must never mutate architecture YAML files. 
-
-This prevents duplicate mutations, structural corruption, and ontology fragmentation during highly concurrent workspace operations.
-
----
-
-## 5. AI-Native Integration Workflow
-
-AAM is designed to sit alongside your AI assistant's system instructions seamlessly.
-
-### Step 1: Lightweight Bootstrap Injection
-During `aam init`, AAM scans your project (up to depth 3) for standard instruction files (`CLAUDE.md`, `.cursorrules`, `.gemini/GEMINI.md`, `AGENT.md`, etc.). It appends a lightweight, idempotent, marker-guarded reference pointing to AAM:
+When `aam init` is executed, the engine injects prompt constraints directly into your AI configuration files (e.g. `CLAUDE.md` or `.cursorrules`), enclosed in safety markers:
 
 ```markdown
 <!-- AAM START -->
-
-This repository uses Architecture-as-Memory (AAM).
-
-Before implementing:
-- Read /architecture/architecture.index.yaml
-- Read affected feature and domain YAML files
-- Maintain architectural cognition incrementally
-
-After implementation:
-- Sub-agents may analyze implementation details but must never mutate architecture cognition directly. Only the primary orchestration agent may write or update architecture YAML nodes.
-- Update only affected architecture nodes
-- Append relationships instead of regenerating globally
-- Preserve stable IDs
-
-Detailed operational rules:
-- /architecture/agents/aam-skill.md
-
+This repository uses Architecture-As-Memory (AAM) to prevent cognitive drift.
+Before writing, refactoring, or generating files, you MUST:
+  1. Inspect /architecture/architecture.index.yaml to read the capability domains.
+  2. Map all new logic directly to defined components inside YAML nodes.
+  3. Never create flat duplicate helper structures in utils or nested directories.
 <!-- AAM END -->
 ```
 
-### Step 2: Slash Command Protocol
-When asking your assistant to build a feature, use custom slash commands or prompt triggers. This hydrates their context window with only the relevant architectural layers instead of dump-loading the whole project:
+### Strict Multi-Agent Governance
 
-```
-/aam FEAT-AUTHENTICATION Add password reset support via SMTP.
-```
+To guarantee absolute graph stability in complex developer environments, AAM enforces a strict role division:
 
-Your assistant is trained via `aam-skill.md` to:
-1. Parse the target capability and its associated component schemas.
-2. Formulate an implementation plan respecting existing design boundaries.
-3. Complete the coding task.
-4. Update affected AAM schemas incrementally (updating responsibilities, appending relationships, and maintaining stable IDs).
+*   **Primary AI Agents / Human Architects**: Permitted to mutate AAM declarative node specifications (`domains/*.yaml`, `features/*.yaml`) when capability requirements expand.
+*   **Sub-Agents / Code Mutators**: Strictly read-only consumers. They read AAM contracts via bootstrap instructions to direct their generation paths, but are restricted from mutating index schemas.
 
 ---
 
-## 6. Hook Philosophy
+## 🔗 Author & License
 
-AAM strictly adheres to a **Local-First, Capabilities-Based, Non-Destructive** hook paradigm:
+**Naresh B A** — Creator & Core Architect
 
-- **No Silent Mutations**: Post-task hooks never auto-write code, preventing corrupt states.
-- **Validation Filtering**: When running `aam hooks install claude`, it appends a post-task verification directive in `CLAUDE.md` and creates a local Git `post-commit` hook.
-- **Developer Review Prompt**: The hook runs `validate` and `doctor` to identify semantic mismatches, presenting a colorized report prompting the engineer to keep the architectural representation in sync.
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Naresh_B_A-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/naresh-b-a-1b5331243)
+[![GitHub](https://img.shields.io/badge/GitHub-Phoenixarjun-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/Phoenixarjun)
+
+Distributed under the MIT License. See [LICENSE](file:///d:/Arjuns%20Work/architecture-as-memory/LICENSE) for details.
 
 ---
 
-## 7. Interactive Operating Console
-
-The AAM visual viewer (`aam dev`) offers a stunning, distraction-free graphite + ember cockpit:
-
-- **Calm UI**: Designed for long engineering sessions under heavy cognitive load. No neon cyber-glow or resource-intensive 3D physics.
-- **Interactive Tree State Preservation**: Zoom, pan coordinates, active inspector sidebars, and expanded tree layers are entirely preserved through incremental patching when live SSE reloads trigger.
-- **Fuzzy Search Command Palette**: Triggered instantly with `Ctrl+K`. Indexes names, stable IDs, descriptions, capabilities, and technical enhancements. Center coordinates are targeted smoothly to keep orientation intact.
+<div align="center">
+  <sub>Built to sustain human comprehension. Designed to anchor AI mutations.</sub>
+</div>
