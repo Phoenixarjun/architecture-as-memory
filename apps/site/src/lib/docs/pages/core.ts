@@ -71,6 +71,12 @@ export const corePages: DocPage[] = [
         title: '3. Local-First, Zero-Dependency Offline Graph',
         content: 'No external databases, SaaS accounts, or internet calls are required. Cognition graphs hydrate dynamically in milliseconds directly from local YAML nodes in the repository, guaranteeing total privacy and offline reliability.',
         accent: 'ember'
+      },
+      {
+        type: 'callout',
+        title: '4. Non-Destructive Scaffolding',
+        content: 'AAM never edits, mutates, or deletes physical application source code. It is non-destructive—providing active rules to AI assistants and validating system schemas with zero production risk.',
+        accent: 'graphite'
       }
     ]
   },
