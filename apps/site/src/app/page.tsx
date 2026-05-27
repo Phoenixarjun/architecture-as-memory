@@ -1,221 +1,168 @@
-import { Outfit, Inter } from 'next/font/google';
+"use client";
 
-const outfit = Outfit({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-outfit' 
-});
-
-const inter = Inter({ 
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-inter' 
-});
+import React from "react";
+import { motion } from "framer-motion";
+import { Heading } from "@/components/ui/Heading";
+import { Section } from "@/components/ui/Section";
+import { GlowCard } from "@/components/ui/GlowCard";
+import { CommandCTA } from "@/components/ui/CommandCTA";
+import { fadeIn, staggerContainer } from "@/lib/motion/presets";
+import { Terminal, Cpu, ShieldAlert, CpuIcon } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className={`${outfit.variable} ${inter.variable} min-h-screen bg-[#0F1115] text-[#F5F7FA] font-sans selection:bg-[#FF8A3D] selection:text-white`}>
-      {/* 1. Header Navigation */}
-      <header className="border-b border-[#2A313D] bg-[#0F1115]/90 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF8A3D] to-[#D96B2B] flex items-center justify-center shadow-[0_0_15px_rgba(255,138,61,0.25)]">
-              <div className="w-3.5 h-3.5 border-2 border-white rotate-45"></div>
-            </div>
-            <div>
-              <span className="font-display font-bold text-lg tracking-tight">Architecture As Memory</span>
-              <span className="text-[10px] text-[#7C8796] block -mt-1 font-mono uppercase tracking-widest">AAM layer</span>
-            </div>
-          </div>
-          <nav className="flex items-center gap-6">
-            <a href="https://github.com/Phoenixarjun/architecture-as-memory" target="_blank" rel="noreferrer" className="text-sm text-[#B8C0CC] hover:text-[#FF8A3D] transition-colors">
-              GitHub
-            </a>
-            <a href="#install" className="px-4 py-2 rounded-lg bg-[#171A21] border border-[#2A313D] text-sm text-[#F5F7FA] hover:border-[#FF8A3D] transition-all duration-300">
-              Get Started
-            </a>
-          </nav>
-        </div>
-      </header>
+    <div className="w-full relative py-12 sm:py-20 flex flex-col gap-16 sm:gap-24 overflow-hidden">
+      
+      {/* 1. HERO ARCHITECTURAL HEADLINE SECTION */}
+      <Section className="pt-8 sm:pt-16">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="text-center max-w-4xl mx-auto flex flex-col items-center gap-6"
+        >
+          {/* Version / Status Tag */}
+          <motion.div
+            variants={fadeIn("up")}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface-dark/60 border border-white/5 text-xs text-brand-ember-light uppercase font-mono tracking-wider"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-ember animate-pulse shrink-0" />
+            <span>State: HARDENED ONTOLOGY READY</span>
+          </motion.div>
 
-      {/* 2. Hero Section */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 flex flex-col md:flex-row items-center gap-12">
-        <div className="flex-1 space-y-6 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#171A21] border border-[#2A313D] text-xs text-[#FFB067]">
-            <span className="w-2 h-2 rounded-full bg-[#FF8A3D] animate-pulse"></span>
-            <span>Version 1.0.0 released</span>
-          </div>
-          <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.1] tracking-tight bg-gradient-to-r from-white via-[#F5F7FA] to-[#FFB067] bg-clip-text text-transparent">
-            Persistent Architecture Cognition for AI-Native Coding
-          </h1>
-          <p className="text-lg text-[#B8C0CC] leading-relaxed max-w-xl">
-            A persistent operational memory layer designed to prevent developers from losing architectural orientation as AI coding agents mutate systems at machine speed.
-          </p>
-          
-          {/* CLI Install Copy Trigger */}
-          <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-4">
-            <div id="install" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#171A21] border border-[#2A313D] font-mono text-sm w-full sm:w-auto">
-              <span className="text-[#FF8A3D]">$</span>
-              <span>npx architecture-as-memory init</span>
-            </div>
-            <a href="#terminal" className="w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-[#FF8A3D] to-[#D96B2B] font-bold text-sm text-white text-center shadow-[0_4px_20px_rgba(255,138,61,0.2)] hover:shadow-[0_4px_25px_rgba(255,138,61,0.35)] transition-all duration-300 transform hover:-translate-y-0.5">
-              Watch Simulator
-            </a>
-          </div>
-        </div>
+          {/* Primary Landing Heading */}
+          <Heading
+            level={1}
+            prefix="[ SYSTEM COGNITION LAYER ]"
+            gradientText="Persistent Architecture Memory"
+            className="justify-center text-center font-extrabold tracking-tight"
+          >
+            AI-Native Software Deserves
+          </Heading>
 
-        {/* Simulated CLI Terminal Panel */}
-        <div id="terminal" className="flex-1 w-full max-w-lg">
-          <div className="rounded-xl overflow-hidden border border-[#2A313D] bg-[#171A21] shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
-            <div className="bg-[#0F1115] px-4 py-3 border-b border-[#2A313D] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#FF5F56]"></span>
-                <span className="w-3 h-3 rounded-full bg-[#F4B740]"></span>
-                <span className="w-3 h-3 rounded-full bg-[#D98C3F]"></span>
-              </div>
-              <span className="text-xs text-[#7C8796] font-mono">AAM terminal emulator</span>
-            </div>
-            <div className="p-5 font-mono text-xs text-[#B8C0CC] space-y-4 leading-relaxed overflow-x-auto min-h-[300px]">
-              <div>
-                <span className="text-[#FF8A3D]">$</span> npx architecture-as-memory init
-              </div>
-              <div className="text-[#7C8796] pl-4">
-                Scanning for active instruction manifests...
-              </div>
-              <div className="text-emerald-500 pl-4 font-semibold">
-                ✓ Appended bootstrap hooks to CLAUDE.md
-              </div>
-              <div className="text-emerald-500 pl-4 font-semibold">
-                ✓ Appended bootstrap hooks to .cursorrules
-              </div>
-              <div className="text-emerald-500 pl-4 font-semibold">
-                ✓ Created /architecture folder structures
-              </div>
-              <div className="text-emerald-500 pl-4 font-semibold">
-                ✓ Copied core YAML templates & AI_INSTRUCTIONS.md
-              </div>
-              <div className="text-[#FFB067] font-bold">
-                🎉 Architecture-As-Memory successfully initialized!
-              </div>
-              
-              <div className="pt-4">
-                <span className="text-[#FF8A3D]">$</span> npx architecture-as-memory dev
-              </div>
-              <div className="text-cyan-400 pl-4">
-                Starting Chokidar file watcher...
-              </div>
-              <div className="text-emerald-500 pl-4 font-bold">
-                🚀 Watcher running at http://localhost:4200
-              </div>
-              <div className="text-[#7C8796] pl-4">
-                Watching /architecture YAML nodes... Live reload active.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* Description */}
+          <motion.p
+            variants={fadeIn("up")}
+            className="text-base sm:text-lg text-white/60 leading-relaxed max-w-2xl font-sans"
+          >
+            A lightweight, local architectural memory layer that protects systems against spatial orientation loss and cognitive drift as autonomous coding agents mutate codebases at machine speed.
+          </motion.p>
 
-      {/* 3. Product Philosophy Split Grid */}
-      <section className="bg-[#171A21] border-y border-[#2A313D] py-20">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <span className="text-xs text-[#FF8A3D] font-mono uppercase tracking-wider font-semibold">The Philosophical Pivot</span>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#F5F7FA]">
-              Architecture is not Code Structure
-            </h2>
-            <p className="text-[#B8C0CC] leading-relaxed">
-              Traditional visualization tools fail because they scan file systems, import paths, and AST trees. This produces massive, unreadable spaghetti graphs.
-            </p>
-            <p className="text-[#B8C0CC] leading-relaxed">
-              <strong>AAM models architectural cognition instead.</strong> Humans think in major operational boundaries (Domains) and business capabilities (Features). AAM maps these high-level relationships, providing immediate clarity when entering a new codebase.
+          {/* Core Interactive Command CTA Prompt */}
+          <motion.div variants={fadeIn("up")} className="w-full pt-4">
+            <CommandCTA />
+          </motion.div>
+        </motion.div>
+      </Section>
+
+      {/* 2. THE THREE COGNITIVE WRAPPER ECOSYSTEMS */}
+      <Section id="ecosystems" className="border-t border-white/5 py-12 bg-brand-surface-dark/10">
+        <div className="flex flex-col gap-12">
+          {/* Header */}
+          <div className="max-w-2xl mx-auto text-center flex flex-col gap-2">
+            <Heading level={2} prefix="[ 01 // CROSS-ECOSYSTEM DISTRIBUTION ]" className="justify-center">
+              Single Core Runtime.
+            </Heading>
+            <p className="text-sm text-white/40 leading-relaxed font-sans">
+              Distributed natively through thin client launchers. Zero duplicate ontology logic, zero validator fragmentation, absolute architectural consistency.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="p-6 rounded-lg bg-[#0F1115] border border-[#2A313D] space-y-3">
-              <span className="text-[#FF8A3D] font-bold text-lg">01</span>
-              <h3 className="font-display font-semibold text-[#F5F7FA]">Cognition-First</h3>
-              <p className="text-xs text-[#7C8796] leading-relaxed">Models business logic and operational capabilities rather than raw AST trees.</p>
-            </div>
-            <div className="p-6 rounded-lg bg-[#0F1115] border border-[#2A313D] space-y-3">
-              <span className="text-[#FF8A3D] font-bold text-lg">02</span>
-              <h3 className="font-display font-semibold text-[#F5F7FA]">Progressive Hydration</h3>
-              <p className="text-xs text-[#7C8796] leading-relaxed">Maintains cognitive stability by expanding nodes dynamically on click.</p>
-            </div>
-            <div className="p-6 rounded-lg bg-[#0F1115] border border-[#2A313D] space-y-3">
-              <span className="text-[#FF8A3D] font-bold text-lg">03</span>
-              <h3 className="font-display font-semibold text-[#F5F7FA]">Multi-Dimensional</h3>
-              <p className="text-xs text-[#7C8796] leading-relaxed">Visualizes risk, maturity, reliability, observability, and churn matrices.</p>
-            </div>
-            <div className="p-6 rounded-lg bg-[#0F1115] border border-[#2A313D] space-y-3">
-              <span className="text-[#FF8A3D] font-bold text-lg">04</span>
-              <h3 className="font-display font-semibold text-[#F5F7FA]">AI Maintainer</h3>
-              <p className="text-xs text-[#7C8796] leading-relaxed">Maintained automatically by your AI coding assistants via patch mutations.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* Cards Grid */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          >
+            {/* Python Card */}
+            <GlowCard className="space-y-4">
+              <div className="w-9 h-9 rounded bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                <Cpu className="w-4 h-4" />
+              </div>
+              <h3 className="font-sans font-bold text-lg text-white">Python (PyPI) Wrapper</h3>
+              <p className="text-xs text-white/50 leading-relaxed font-sans">
+                A thin, non-intrusive executable launcher wrapper. Safely parses OS paths, runs standard local verification, and propagates exit codes cleanly in <code className="font-mono text-[10px] text-brand-ember bg-white/5 px-1 py-0.5 rounded">venv</code>.
+              </p>
+              <div className="pt-2 font-mono text-[10px] text-white/40">
+                $ pip install architecture-as-memory
+              </div>
+            </GlowCard>
 
-      {/* 4. Feature Highlights */}
-      <section className="max-w-6xl mx-auto px-6 py-20 space-y-16">
-        <div className="text-center max-w-xl mx-auto space-y-3">
-          <span className="text-xs text-[#FF8A3D] font-mono uppercase tracking-wider font-semibold">Engineered Capabilities</span>
-          <h2 className="font-display font-bold text-3xl text-[#F5F7FA]">Built for Scale & Rapid Orientation</h2>
-          <p className="text-[#B8C0CC] text-sm leading-relaxed">Everything you need to maintain spatial alignment inside an expanding AI codebase.</p>
-        </div>
+            {/* PowerShell Card */}
+            <GlowCard className="space-y-4">
+              <div className="w-9 h-9 rounded bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                <Terminal className="w-4 h-4" />
+              </div>
+              <h3 className="font-sans font-bold text-lg text-white">PowerShell Gallery</h3>
+              <p className="text-xs text-white/50 leading-relaxed font-sans">
+                Native cmdlet mappings conforming strictly to PowerShell standards. Integrates perfectly inside Windows shells and CI environments with zero setup.
+              </p>
+              <div className="pt-2 font-mono text-[10px] text-white/40">
+                &gt; Install-Module -Name AAM
+              </div>
+            </GlowCard>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Item 1 */}
-          <div className="p-8 rounded-xl bg-[#171A21] border border-[#2A313D] hover:border-[#FF8A3D] transition-all duration-300 space-y-4">
-            <div className="w-10 h-10 rounded-lg bg-[#1E232D] flex items-center justify-center text-[#FF8A3D]">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            </div>
-            <h3 className="font-display font-semibold text-lg text-[#F5F7FA]">Bounded Topology Map</h3>
-            <p className="text-sm text-[#B8C0CC] leading-relaxed">
-              Visualizes relationships contextually. It draws live dependency lines only when parent branches are expanded, preventing information overload.
+            {/* Rust Card */}
+            <GlowCard className="space-y-4">
+              <div className="w-9 h-9 rounded bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+                <CpuIcon className="w-4 h-4" />
+              </div>
+              <h3 className="font-sans font-bold text-lg text-white">Rust Wrapper Crate</h3>
+              <p className="text-xs text-white/50 leading-relaxed font-sans">
+                An ultra-lightweight, zero-dependency compiled binary launcher wrapping cargo scripts. Protects system memory and executes directly from the console.
+              </p>
+              <div className="pt-2 font-mono text-[10px] text-white/40">
+                $ cargo install aam-cli
+              </div>
+            </GlowCard>
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* 3. CORE PRINCIPLE METRICS INFO */}
+      <Section id="features" className="border-t border-white/5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="flex flex-col gap-6">
+            <Heading level={2} prefix="[ 02 // INTENT PRESERVATION ]">
+              Preventing Cognitive Drift.
+            </Heading>
+            <p className="text-sm text-white/60 leading-relaxed font-sans">
+              Traditional modeling tools parse raw directories producing unreadable spaghetti AST trees. 
+              <strong> AAM maps developer cognition directly.</strong>
+            </p>
+            <p className="text-sm text-white/60 leading-relaxed font-sans">
+              By structuring system bounds into Domains, Features, and Components, AAM ensures both human engineers and AI coding models share a single, living, synchronized architectural contract.
             </p>
           </div>
 
-          {/* Item 2 */}
-          <div className="p-8 rounded-xl bg-[#171A21] border border-[#2A313D] hover:border-[#FF8A3D] transition-all duration-300 space-y-4">
-            <div className="w-10 h-10 rounded-lg bg-[#1E232D] flex items-center justify-center text-[#FF8A3D]">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <div className="p-6 rounded-lg glass-surface border border-white/5 space-y-4 font-mono text-xs text-white/70">
+            <div className="flex items-center justify-between pb-3 border-b border-white/5 text-brand-ember font-bold">
+              <span>🩺 COGNITION TELEMETRY</span>
+              <span className="text-[10px] bg-brand-ember/10 border border-brand-ember/20 px-2 py-0.5 rounded text-brand-ember-light">STABLE</span>
             </div>
-            <h3 className="font-display font-semibold text-lg text-[#F5F7FA]">Command Palette Quick Focus</h3>
-            <p className="text-sm text-[#B8C0CC] leading-relaxed">
-              Press Ctrl+K from anywhere to look up capabilities, owners, or microservices instantly. Selecting a result automatically centers the graph.
-            </p>
-          </div>
-
-          {/* Item 3 */}
-          <div className="p-8 rounded-xl bg-[#171A21] border border-[#2A313D] hover:border-[#FF8A3D] transition-all duration-300 space-y-4">
-            <div className="w-10 h-10 rounded-lg bg-[#1E232D] flex items-center justify-center text-[#FF8A3D]">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-white/40">ONTOLOGY CONSISTENCY:</span>
+                <span className="text-green-400">100% SECURE</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/40">SCHEMA DEVIATION:</span>
+                <span className="text-green-400">0.00% DRIFT</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/40">HYDRA Telemetry parse:</span>
+                <span className="text-brand-ember-light">36ms (Fast)</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-white/40">Validation Hook status:</span>
+                <span className="text-green-400">POST-COMMIT ACTIVE</span>
+              </div>
             </div>
-            <h3 className="font-display font-semibold text-lg text-[#F5F7FA]">Offline-First Syncing</h3>
-            <p className="text-sm text-[#B8C0CC] leading-relaxed">
-              AAM reads and parses standard local YAML files. No external databases, SaaS trackers, or web integrations required. Fully functional in flight mode.
-            </p>
           </div>
         </div>
-      </section>
-
-      {/* 5. Footer */}
-      <footer className="border-t border-[#2A313D] bg-[#0F1115] py-12">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-[#7C8796]">
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-6 rounded-md bg-[#FF8A3D] flex items-center justify-center">
-              <div className="w-2.5 h-2.5 border border-white rotate-45"></div>
-            </div>
-            <span>Architecture As Memory © 2026. MIT Licensed.</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <a href="https://github.com/Phoenixarjun/architecture-as-memory" target="_blank" rel="noreferrer" className="hover:text-[#FF8A3D] transition-colors">
-              GitHub repository
-            </a>
-          </div>
-        </div>
-      </footer>
+      </Section>
     </div>
   );
 }

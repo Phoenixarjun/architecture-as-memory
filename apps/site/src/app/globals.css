@@ -1,26 +1,87 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-bg: #0F1115;
+  --color-brand-surface-dark: #171A21;
+  --color-brand-surface-medium: #1E232D;
+  --color-brand-ember: #FF8A3D;
+  --color-brand-ember-dark: #D96B2B;
+  --color-brand-ember-light: #FFB067;
+  
+  --font-sans: var(--font-inter), var(--font-outfit), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-inter: "Inter", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+  --font-jetbrains-mono: "JetBrains Mono", monospace;
+  background-color: #0F1115;
+  color: #ededed;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0F1115;
+  color: #E2E8F0;
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0F1115;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E232D;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF8A3D;
+}
+
+/* Glassmorphism glass utility */
+.glass-surface {
+  background: rgba(23, 26, 33, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.glass-surface-hover:hover {
+  background: rgba(30, 35, 45, 0.85);
+  border-color: rgba(255, 138, 61, 0.25);
+  box-shadow: 0 0 25px rgba(255, 138, 61, 0.05);
+}
+
+/* Ambient dotted grid */
+.dotted-grid {
+  background-size: 24px 24px;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+/* Architectural precision line grids */
+.precision-grid {
+  background-size: 120px 120px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* Cinematic film noise */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.022;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Ambient Radial Glow Gradients */
+.radial-glow-ember {
+  background: radial-gradient(circle at center, rgba(255, 138, 61, 0.08) 0%, transparent 70%);
 }
