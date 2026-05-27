@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 export function Navbar() {
   return (
@@ -10,15 +9,11 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
         {/* Branding Logo & Name */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="relative w-6 h-6 shrink-0">
-            <Image
-              src="/AAMLogo.png"
-              alt="Architecture-As-Memory Logo"
-              fill
-              priority
-              className="object-contain group-hover:scale-110 transition-transform duration-300"
-            />
-          </div>
+          <img
+            src="/AAMLogo.png"
+            alt="Architecture-As-Memory Logo"
+            className="w-20 h-20 shrink-0 object-contain group-hover:scale-110 transition-transform duration-300"
+          />
           <span className="font-sans font-bold text-base tracking-wide text-white group-hover:text-brand-ember transition-colors duration-200">
             ARCHITECTURE-AS-MEMORY
           </span>

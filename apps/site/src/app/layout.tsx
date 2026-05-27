@@ -26,6 +26,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Architecture-As-Memory (AAM) | Persistent Architectural Cognition",
   description: "Real-time architectural memory and boundaries for AI-native software teams and agentic coding assistants.",
+  icons: {
+    icon: "/AAMLogo.png",
+    shortcut: "/AAMLogo.png",
+    apple: "/AAMLogo.png",
+  }
 };
 
 export default function RootLayout({
