@@ -58,7 +58,7 @@ export function Footer() {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 mt-8 pt-8 border-t border-white/[0.03] flex flex-col sm:flex-row items-center justify-between gap-4">
         <span className="text-[10px] font-mono text-white/30">
-          © {currentYear} ARCHITECTURE-AS-MEMORY. ALL RIGHTS RESERVED.
+          Released under the MIT License.
         </span>
         <span className="text-[10px] font-mono text-brand-ember/60">
           ARCHITECTURE INTENT PRESERVING MECHANISM

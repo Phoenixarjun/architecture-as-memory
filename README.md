@@ -12,22 +12,20 @@
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/CLI-TypeScript%20%2B%20Rust-ED8B00?style=flat-square&logo=typescript&logoColor=white" />
+    <img src="https://img.shields.io/badge/Engine-TypeScript_/_Node.js-ED8B00?style=flat-square&logo=typescript&logoColor=white" />
     <img src="https://img.shields.io/badge/Claude_Code-Optimized-black?style=flat-square&logo=anthropic&logoColor=white" />
     <img src="https://img.shields.io/badge/Cursor-Supported-00ADD8?style=flat-square" />
     <img src="https://img.shields.io/badge/Gemini_CLI-Compatible-4285F4?style=flat-square&logo=googlegemini&logoColor=white" />
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/npm_package-1.0.0--beta.2-CB3837?style=flat-square&logo=npm&logoColor=white" />
-    <img src="https://img.shields.io/badge/PyPI-wrapper-3776AB?style=flat-square&logo=python&logoColor=white" />
-    <img src="https://img.shields.io/badge/Crates.io-binary-black?style=flat-square&logo=rust&logoColor=white" />
-    <img src="https://img.shields.io/badge/Docker-validated-2496ED?style=flat-square&logo=docker&logoColor=white" />
+    <img src="https://img.shields.io/badge/npm_package-1.0.0-CB3837?style=flat-square&logo=npm&logoColor=white" />
   </p>
 
   <br/>
 
   <a href="#-why-this-project-exists">Why AAM Exists</a> •
+  <a href="#-when-aam-is-unnecessary">When It is Unnecessary</a> •
   <a href="#%EF%B8%8F-how-it-works">How It Works</a> •
   <a href="#-before-vs-after-cognitive-scaffolding">Before vs. After</a> •
   <a href="#-high-velocity-ai-anti-patterns">AI Anti-Patterns</a> •
@@ -42,7 +40,13 @@
 > **"LLM Wiki gives your AI agent memory.**  
 > **AAM gives YOU memory."**
 
-In AI-native repositories, code modification occurs at machine speed. While autonomous agents can generate thousands of lines of code in seconds, the human mental model of the codebase degrades rapidly. AAM acts as a local-first architectural memory layer, anchoring both human developers and AI assistants to strict capability boundaries to prevent silent decay.
+AI coding agents mutate repositories faster than humans can maintain architectural understanding.
+
+LLM Wiki solved memory for the agent.
+
+AAM solves memory for the developer.
+
+It provides a persistent architectural cognition layer that keeps humans and AI systems aligned through local-first YAML boundaries, live topology graphs, and governance-aware validation.
 
 ---
 
@@ -69,6 +73,15 @@ All three solved the exact same recovery logic. None shared state or interfaces.
 
 ---
 
+## 🛑 When AAM Is Unnecessary
+
+AAM is designed to sustain technical comprehension in long-lived, highly mutated codebases. You probably do **NOT** need AAM for:
+*   **Throwaway Prototypes**: Single-page templates or weekend hackathon experiments under 2,000 LOC.
+*   **Single-File Scripts**: Lightweight standalone Python or Node automation wrappers.
+*   **Static Legacy Systems**: Mature, slow-moving software that changes less than once a month and is written purely by a human developer.
+
+---
+
 ## 🏗️ How It Works
 
 AAM models repository architecture into four strict hierarchical layers: **System → Domains → Features → Components**. 
@@ -85,6 +98,28 @@ AAM models repository architecture into four strict hierarchical layers: **Syste
   <p><i>Focused inspection overlay showing strict metadata fields, ownership parameters, and component dependencies dynamically scanned from local YAML models.</i></p>
   <br/>
 </div>
+
+### 📺 Interactive Visual Demos
+
+AAM operates completely locally and dynamically. Below are quick demonstrations of the key workflows:
+
+*   **1. Scaffolding Initialization (`aam init`)**  
+    ![AAM Init Demo](./apps/site/public/aam-init.gif)  
+    *Run `npx @architecture-as-memory/aam@latest init` to detect active AI rule files and inject prompt safety blocks.*
+
+*   **2. Live Graph Hydration (`aam dev`)**  
+    ![AAM Live Graph Demo](./apps/site/public/aam-dev.gif)  
+    *Modify any local YAML configuration and watch the visualizer dashboard update in real-time (under 150ms).*
+
+*   **3. Schemas & Relationships Validation (`aam validate`)**  
+    ![AAM Validation Demo](./apps/site/public/aam-validate.gif)  
+    *Detect syntax errors or broken inter-domain imports immediately during pre-commit compilation.*
+
+*   **4. Doctor Cognitive-Smell Engine (`aam doctor`)**  
+    ![AAM Doctor Demo](./apps/site/public/aam-doctor.gif)  
+    *Scan repository changes to automatically detect helper file explosion and circular context bypasses.*
+
+---
 
 ### Dual-Consumption Scaffolding
 
@@ -185,7 +220,7 @@ AAM features a zero-dependency, local-first CLI tool to manage cognition graphs.
 |---------|--------|-------------------|
 | `aam init` | Bootstraps AAM, scans AI assistants, injects prompt scaffolds. | Detects rule files (`CLAUDE.md`, `AGENT.md`) and updates boundaries. |
 | `aam dev` | Starts local watcher and hydrates interactive graph. | Launches graphical visual console at `http://localhost:4200` with telemetry. |
-| `aam check` | Validates YAML schemas against structural constraints. | Errors out with line details on malformed YAML or broken relationships. |
+| `aam validate` | Validates YAML schemas against structural constraints. | Errors out with line details on malformed YAML or broken relationships. |
 | `aam doctor` | Self-diagnoses cognitive smells in active repository code. | Reports unmapped files, duplicate helpers, and boundary bypasses. |
 
 ---
@@ -260,7 +295,7 @@ To guarantee absolute graph stability in complex developer environments, AAM enf
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Naresh_B_A-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/naresh-b-a-1b5331243)
 [![GitHub](https://img.shields.io/badge/GitHub-Phoenixarjun-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/Phoenixarjun)
 
-Distributed under the MIT License. See [LICENSE](file:///d:/Arjuns%20Work/architecture-as-memory/LICENSE) for details.
+Released under the MIT License. See [LICENSE](file:///d:/Arjuns%20Work/architecture-as-memory/LICENSE) for details.
 
 ---
 
