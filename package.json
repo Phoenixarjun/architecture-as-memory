@@ -15,6 +15,8 @@
     "build:viewer": "npm run build --workspace=packages/viewer",
     "build:cli": "npm run build --workspace=packages/cli",
     "bundle:all": "node ./scripts/bundle-cross-ecosystem.js",
+    "sync:versions": "node ./scripts/sync-versions.js",
+    "test:cross": "node ./scripts/test-cross-ecosystem.js",
     "test": "npm test --workspaces"
   },
   "repository": {
