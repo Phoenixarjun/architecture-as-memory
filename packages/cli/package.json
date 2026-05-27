@@ -1,6 +1,6 @@
 {
   "name": "@architecture-as-memory/aam",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Living cognitive architecture maps for AI coding assistants.",
   "bin": {
     "aam": "./bin/aam.js"

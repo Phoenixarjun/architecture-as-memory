@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "architecture-as-memory"
-version = "1.0.0b5"
+version = "1.0.0b6"
 description = "Living cognitive architecture maps for AI coding assistants."
 readme = "README.md"
 requires-python = ">=3.7"

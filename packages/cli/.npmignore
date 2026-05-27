@@ -1,0 +1,6 @@
+# Keep compiled viewer assets during npm publish
+# (Overrides .gitignore behavior for packaging)
+
+# Ignore local test and build scripts
+test/
+scripts/
