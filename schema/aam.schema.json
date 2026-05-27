@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Architecture-As-Memory (AAM) Canonical Schema",
+  "description": "Authoritative contract for offline-first cognition schemas mapping systems, domains, features, components, and enhancements.",
+  "type": "object",
+  "required": ["type", "schema_version", "id", "name", "summary", "purpose"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["system", "domain", "feature", "component", "enhancement"]
+    },
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Ontology schema version to ensure backward and forward compatibility."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]+$",
+      "description": "Unique deterministic uppercase ID generated via FNV-1a hashing strategy."
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Clear human-readable title of the node."
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 150,
+      "description": "Concise 1-3 line explanation of WHAT this node does in human cognitive space."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Architectural explanation of WHY this node exists strategically."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 250,
+      "description": "Compressed implementation or descriptive context under 250 characters."
+    },
+    "status": {
+      "type": "object",
+      "properties": {
+        "lifecycle": {
+          "type": "string",
+          "enum": ["active", "deprecated", "evolving", "proposed"]
+        },
+        "maturity": {
+          "type": "string",
+          "enum": ["experimental", "production", "hardened"]
+        },
+        "reliability": {
+          "type": "string",
+          "enum": ["unstable", "reliable", "hardened"]
+        },
+        "observability": {
+          "type": "string",
+          "enum": ["none", "partial", "complete"]
+        },
+        "risk": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Concrete action-oriented capabilities offered by this node."
+    },
+    "responsibilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Operational ownership boundaries of this node."
+    },
+    "knowledge_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "path"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["wiki", "design", "rfc", "repository", "other"]
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative workspace file path or web link referencing domain-specific documentation."
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "List of object structured references ensuring rendering safety in sidebars."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_modified_by": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "system" } }
+      },
+      "then": {
+        "properties": {
+          "architecture_style": { "type": "string" },
+          "runtime_stack": {
+            "type": "object",
+            "required": ["language", "frameworks"],
+            "properties": {
+              "language": { "type": "string" },
+              "frameworks": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "operational_maturity": { "type": "string" },
+          "repository": { "type": "string" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "domain" } }
+      },
+      "then": {
+        "properties": {
+          "ownership": { "type": "string" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "feature" } }
+      },
+      "then": {
+        "required": ["domains"],
+        "properties": {
+          "domains": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "List of domain IDs this feature bridges."
+          },
+          "components": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of component IDs implementing this feature."
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "component" } }
+      },
+      "then": {
+        "required": ["domain"],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "ID of parent domain this component belongs to."
+          },
+          "tech_stack": {
+            "type": "object",
+            "properties": {
+              "language": { "type": "string" },
+              "framework": { "type": "string" },
+              "database": { "type": "string" },
+              "messaging": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

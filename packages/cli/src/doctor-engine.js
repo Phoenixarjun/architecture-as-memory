@@ -335,10 +335,16 @@ export async function runDoctor(targetDir = process.cwd(), silent = false) {
     }
   }
 
-  // Missing knowledge links
+  // Missing or Malformed knowledge links (Task 3)
   for (const node of allNodes) {
     if (!node.knowledge_links || !Array.isArray(node.knowledge_links) || node.knowledge_links.length === 0) {
       addIssue('Missing Knowledge Link', node, `Node '${node.id}' has no knowledge_links specified.`);
+    } else {
+      node.knowledge_links.forEach((link, idx) => {
+        if (!link || typeof link !== 'object' || Array.isArray(link) || !link.type || !link.path) {
+          addIssue('Malformed Knowledge Link', node, `Node '${node.id}' has a malformed knowledge link at index ${idx}. Must strictly be an object {type, path}.`);
+        }
+      });
     }
   }
 

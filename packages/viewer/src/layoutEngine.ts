@@ -66,9 +66,18 @@ export function computeGraphLayout({
     const dom = domains.find(d => d.id === selectedNodeId);
     if (dom) {
       features.forEach(f => {
-        if (f.domains.includes(dom.id)) {
+        const belongsToDom = (Array.isArray(f.domains) && f.domains.includes(dom.id)) || (f.domain === dom.id);
+        if (belongsToDom) {
           neighborhood.add(f.id);
-          f.components.forEach(cId => neighborhood.add(cId));
+          if (Array.isArray(f.components)) {
+            f.components.forEach(cId => neighborhood.add(cId));
+          }
+          components.forEach(c => {
+            const belongsToFeat = (Array.isArray(c.features) && c.features.includes(f.id)) || (c.feature === f.id);
+            if (belongsToFeat) {
+              neighborhood.add(c.id);
+            }
+          });
         }
       });
     }
@@ -76,24 +85,49 @@ export function computeGraphLayout({
     // Feature selection neighborhood
     const feat = features.find(f => f.id === selectedNodeId);
     if (feat) {
-      feat.domains.forEach(dId => neighborhood.add(dId));
-      feat.components.forEach(cId => {
-        neighborhood.add(cId);
-        relationships.forEach(rel => {
-          if (rel.source === cId) neighborhood.add(rel.target);
-          if (rel.target === cId) neighborhood.add(rel.source);
+      if (Array.isArray(feat.domains)) {
+        feat.domains.forEach(dId => neighborhood.add(dId));
+      } else if (feat.domain) {
+        neighborhood.add(feat.domain);
+      }
+
+      if (Array.isArray(feat.components)) {
+        feat.components.forEach(cId => {
+          neighborhood.add(cId);
+          relationships.forEach(rel => {
+            if (rel.source === cId) neighborhood.add(rel.target);
+            if (rel.target === cId) neighborhood.add(rel.source);
+          });
         });
+      }
+
+      components.forEach(c => {
+        const belongsToFeat = (Array.isArray(c.features) && c.features.includes(feat.id)) || (c.feature === feat.id);
+        if (belongsToFeat) {
+          neighborhood.add(c.id);
+          relationships.forEach(rel => {
+            if (rel.source === c.id) neighborhood.add(rel.target);
+            if (rel.target === c.id) neighborhood.add(rel.source);
+          });
+        }
       });
     }
     
     // Component selection neighborhood
     const comp = components.find(c => c.id === selectedNodeId);
     if (comp) {
-      neighborhood.add(comp.domain);
+      if (comp.domain) neighborhood.add(comp.domain);
       features.forEach(f => {
-        if (f.components.includes(comp.id)) {
+        const includesComp = (Array.isArray(f.components) && f.components.includes(comp.id)) || 
+                             (Array.isArray(comp.features) && comp.features.includes(f.id)) ||
+                             (comp.feature === f.id);
+        if (includesComp) {
           neighborhood.add(f.id);
-          f.domains.forEach(dId => neighborhood.add(dId));
+          if (Array.isArray(f.domains)) {
+            f.domains.forEach(dId => neighborhood.add(dId));
+          } else if (f.domain) {
+            neighborhood.add(f.domain);
+          }
         }
       });
     }
@@ -109,7 +143,7 @@ export function computeGraphLayout({
     const isFrontendNode = () => {
       if (nodeType === 'domainNode') return nodeId.includes('FRONTEND');
       if (nodeType === 'featureNode') {
-        return rawData.domains && rawData.domains.some((d: string) => d.includes('FRONTEND'));
+        return Array.isArray(rawData.domains) && rawData.domains.some((d: string) => d.includes('FRONTEND'));
       }
       if (nodeType === 'componentNode') {
         return rawData.domain && rawData.domain.includes('FRONTEND');
@@ -120,7 +154,7 @@ export function computeGraphLayout({
     const isBackendNode = () => {
       if (nodeType === 'domainNode') return nodeId.includes('BACKEND');
       if (nodeType === 'featureNode') {
-        return rawData.domains && rawData.domains.some((d: string) => d.includes('BACKEND'));
+        return Array.isArray(rawData.domains) && rawData.domains.some((d: string) => d.includes('BACKEND'));
       }
       if (nodeType === 'componentNode') {
         return rawData.domain && rawData.domain.includes('BACKEND');

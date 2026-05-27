@@ -53,11 +53,48 @@ Always compute and output this exact ID pattern when creating a node, ensuring i
 
 ---
 
-## 4. Required Schema Fields & Template
+### 4. Required Schema Fields & Templates
 
-Every AAM YAML schema must include `schema_version: 1`, explicit `type`, dynamic `id`, `purpose`, and temporal tracing parameters.
+Every AAM YAML schema must include `schema_version: 1`, explicit `type`, dynamic FNV-1a derived `id`, `name`, `summary` (WHAT), `purpose` (WHY), and temporal tracing parameters.
 
-### Standard Component Template:
+### 1. Domain Template
+```yaml
+schema_version: 1
+id: DOM-[4-HEX-FNV]
+name: Unique Domain Name
+summary: Concise 1-3 line cognitive overview of WHAT this domain does.
+type: domain
+purpose: Explains WHY this bounded domain space exists strategically.
+ownership: Platform Team
+created_at: "YYYY-MM-DD"
+updated_at: "YYYY-MM-DD"
+last_modified_by: "agent-name"
+```
+
+### 2. Feature Template
+```yaml
+schema_version: 1
+id: FEAT-[4-HEX-FNV]
+name: Unique Feature Name
+summary: Concise 1-3 line cognitive overview of WHAT this feature does.
+type: feature
+domains:
+  - DOM-[4-HEX-FNV]
+components:
+  - COMP-[4-HEX-FNV]
+purpose: Explains WHY this feature capability exists.
+status:
+  lifecycle: proposed | active | evolving | stable | deprecated
+  implementation: partial | complete
+  reliability: unknown | unstable | reliable | hardened
+capabilities:
+  - concise functional capability bullet
+created_at: "YYYY-MM-DD"
+updated_at: "YYYY-MM-DD"
+last_modified_by: "agent-name"
+```
+
+### 3. Component Template
 ```yaml
 schema_version: 1
 id: COMP-[4-HEX-FNV]
@@ -65,24 +102,21 @@ name: Unique Component Name
 summary: Concise 1-3 line cognitive overview of WHAT the component does.
 type: component
 domain: DOM-[4-HEX-FNV]
-purpose: Explains WHY this specific implementation node exists in the system topology.
+purpose: Explains WHY this specific implementation node exists.
 status:
   lifecycle: proposed | active | evolving | stable | deprecated
   implementation: partial | complete
   reliability: unknown | unstable | reliable | hardened
-  observability: missing | partial | complete
-  maturity: experimental | scaling | production | legacy
-  risk: low | medium | high | critical
-  change_frequency: low | moderate | high | volatile
 capabilities:
-  - compact bullet explaining what it does
-  - another concise capability
+  - compact capability bullet
+responsibilities:
+  - validates input signatures
+knowledge_links:
+  - type: wiki
+    path: ./wiki/security-spec.md
 created_at: "YYYY-MM-DD"
 updated_at: "YYYY-MM-DD"
 last_modified_by: "agent-name"
-responsibilities:
-  - validates incoming JWT tokens
-  - issues session records
 ```
 
 ---
@@ -99,6 +133,8 @@ Valid relationship types:
 * `writes_to`: Mutates a database or cache.
 * `exposes`: Provides an API routing endpoint.
 * `communicates_with`: Synchronous network request.
+* `owned_by`: Assigns ownership team boundaries.
+* `triggers`: Direct execution callback.
 
 ```yaml
 relationships:
@@ -140,16 +176,13 @@ Keep your descriptions concise, link wiki sources, stabilize your IDs, and keep 
 
 To protect this living system from entropy under continuous AI mutations, you must adhere strictly to these structural constraints:
 
-1. **Unquoted Colon Safety**: Never write unquoted colons followed by spaces inside text values (e.g. `cache policy (ttl: 3min)`). Doing so breaks YAML parser libraries. Wrap any string value containing colons or colon-space sequences inside double-quotes (e.g. `"cache policy (ttl: 3min)"`) to guarantee safe YAML parsing.
-2. **Cognitive Summary vs Purpose**: Every schema MUST include both:
-   - `summary`: A 1-3 line concise human cognitive compression explaining *what* the node does (under 150 characters).
-   - `purpose`: Explaining *why* the node exists in the topological intent structure.
-3. **Compressed Descriptions**: Descriptions must not exceed 250 characters. Keep summaries compressed to maintain a high cognitive density.
-4. **Operational Capability Bullets**: Define components and features using short, action-oriented capabilities. Avoid long paragraphs.
-5. **Immutable Node IDs**: Once generated via the deterministic FNV-1a strategy, never alter a node's ID. All global couplings depend on them.
-6. **Approved Relationship Semantics**: Relationships must only map to the central registry:
-   - `depends_on`, `consumes`, `publishes_to`, `communicates_with`, `reads_from`, `writes_to`, `exposes`, `owned_by`, `triggers`.
-7. **Avoid Duplicate Features/Domains**: Check the graph before creating features or domains. Search for synonyms (e.g. "auth" vs "authentication") to prevent duplicate cognitive maps.
-8. **Eliminate Relationship Spam**: Only document structural, core-level dependency relationships. Do not map every low-level utility import. Keep the topology understandable.
-9. **Protected Fields Integrity**: Respect nodes declaring `protected_fields`. Do not mutate protected properties without explicitly aligning with baseline commits.
-10. **Primary Orchestration Agent Only**: Sub-agents may analyze implementation details but must never mutate architecture cognition directly. Only the primary orchestration agent may write or update architecture YAML nodes. This prevents ontology fragmentation, duplicate mutations, and topology corruption across multi-agent runtimes (such as Claude Desktop sub-agents, Gemini multi-agent workflows, OpenCode task agents, or Codex runtimes).
+1. **Unquoted String Safety**: Never write unquoted colons followed by spaces (`:`), angle brackets (`<`, `>`), curly brackets (`{}`), or backticks (`` ` ``) inside text values. Always wrap values containing these characters in double-quotes (e.g., `"(ttl: 3min)"`, `"Promise<void>"`).
+2. **Cognitive Summary vs Purpose**: Every schema MUST include both `summary` (concise 1-3 line "WHAT", max 150 chars) and `purpose` ("WHY").
+3. **Structured knowledge_links**: All knowledge links must strictly be objects with `{ type: wiki|design|rfc|repository|other, path: string }`. Never write plain strings.
+4. **Compressed Descriptions**: Descriptions must not exceed 250 characters. Keep summaries compressed to maintain a high cognitive density.
+5. **Operational Capability Bullets**: Define components and features using short, action-oriented capabilities. Avoid long paragraphs.
+6. **Immutable Node IDs**: Once generated via the deterministic FNV-1a strategy, never alter a node's ID. All global couplings depend on them.
+7. **Approved Relationship Semantics**: Relationships must only map to the central registry: `depends_on`, `consumes`, `publishes_to`, `communicates_with`, `reads_from`, `writes_to`, `exposes`, `owned_by`, `triggers`.
+8. **Incremental Validation Workflow**: To prevent mass ontology corruption, follow a progressive validation strategy: **validate your changes by running `aam validate` and `aam doctor` after every 5 created or mutated nodes**.
+9. **Eliminate Relationship Spam**: Only document structural, core-level dependency relationships. Do not map every low-level utility import. Keep the topology understandable.
+10. **Primary Orchestration Agent Only**: Sub-agents may analyze implementation details but must never mutate architecture cognition directly. Only the primary orchestration agent may write or update architecture YAML nodes. This prevents ontology fragmentation, duplicate mutations, and topology corruption across multi-agent runtimes.

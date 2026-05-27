@@ -46,6 +46,7 @@ export interface Feature {
   schema_version?: number;
   purpose?: string;
   domains: string[];
+  domain?: string;
   components: string[];
   status?: {
     lifecycle?: string;
@@ -74,6 +75,8 @@ export interface Component {
   schema_version?: number;
   purpose?: string;
   domain: string;
+  features?: string[];
+  feature?: string;
   status?: {
     lifecycle?: string;
     implementation?: string;

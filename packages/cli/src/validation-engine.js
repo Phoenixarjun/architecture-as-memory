@@ -121,12 +121,23 @@ export async function validateArchitecture(targetDir = process.cwd(), silent = f
       if (!(await fs.pathExists(filePath))) continue;
       const content = await fs.readFile(filePath, 'utf8');
 
-      // Check for unquoted unsafe colons inside values (Task 2)
+      // Check for unquoted unsafe patterns inside values (Task 7)
       const lines = content.split('\n');
       lines.forEach((line, idx) => {
-        const colonMatch = line.match(/^\s*(purpose|description|summary|name|title|error|message):\s*([^"'>|].*:\s+.*)$/);
+        // Match unquoted colons followed by a space
+        const colonMatch = line.match(/^\s*(purpose|description|summary|name|title|error|message):\s*([^"'>|\[\{].*:\s+.*)$/);
         if (colonMatch) {
           addWarning(relPath, `Unsafe Unquoted Colon Pattern on line ${idx + 1}`, `Value contains an unquoted colon pattern: "${colonMatch[2].trim()}". Please wrap the entire value in double-quotes to prevent parsing issues.`);
+        }
+        // Match unquoted angle brackets
+        const angleBracketMatch = line.match(/^\s*(purpose|description|summary|name|title):\s*([^"'>|].*[<>].*)$/);
+        if (angleBracketMatch) {
+          addWarning(relPath, `Unsafe Unquoted Angle Bracket Pattern on line ${idx + 1}`, `Value contains unquoted angle brackets: "${angleBracketMatch[2].trim()}". Please wrap the entire value in double-quotes to avoid parse drift.`);
+        }
+        // Match unquoted backticks
+        const backtickMatch = line.match(/^\s*(purpose|description|summary|name|title):\s*([^"'>|].*`.*)$/);
+        if (backtickMatch) {
+          addWarning(relPath, `Unsafe Unquoted Backticks Pattern on line ${idx + 1}`, `Value contains unquoted backticks: "${backtickMatch[2].trim()}". Please wrap the entire value in double-quotes.`);
         }
       });
 
@@ -205,22 +216,43 @@ export async function validateArchitecture(targetDir = process.cwd(), silent = f
       addWarning(relPath, `Schema evolution mismatch: version '${node.schema_version}' detected. Current supported standard is schema_version: 1.`);
     }
 
-    // Purpose checks
+    // Purpose checks (Task 2 & 4)
     if (!node.purpose) {
-      addWarning(relPath, 'Missing "purpose" field explaining WHY this node exists in AAM architecture');
+      addError(relPath, 'Missing required "purpose" field explaining WHY this node exists strategically.');
     }
 
     // Common fields
     if (!node.name) {
-      addError(relPath, 'Missing "name" field');
+      addError(relPath, 'Missing required "name" field');
     }
     if (!node.summary) {
-      addWarning(relPath, 'Missing "summary" field explaining WHAT this node does in 1-3 lines');
+      addError(relPath, 'Missing required "summary" field explaining WHAT this node does in 1-3 lines');
     } else if (node.summary.length > 150) {
       addWarning(relPath, 'Cognitive summary is too long', 'Keep summary concise (under 150 characters) to ensure clean HUD rendering.');
     }
     if (!node.description) {
-      addWarning(relPath, 'Missing "description" summary');
+      addWarning(relPath, 'Missing "description" field');
+    }
+
+    // knowledge_links object structure verification (Task 3)
+    if (node.knowledge_links !== undefined) {
+      if (!Array.isArray(node.knowledge_links)) {
+        addError(relPath, 'Invalid "knowledge_links" field', '"knowledge_links" must be an array of objects.');
+      } else {
+        node.knowledge_links.forEach((link, idx) => {
+          if (!link || typeof link !== 'object' || Array.isArray(link)) {
+            addError(relPath, `Invalid knowledge link at index ${idx}`, 'Each knowledge link must be a structured object containing "type" and "path".');
+          } else {
+            const VALID_LINK_TYPES = new Set(['wiki', 'design', 'rfc', 'repository', 'other']);
+            if (!link.type || !VALID_LINK_TYPES.has(link.type)) {
+              addError(relPath, `Invalid knowledge link type at index ${idx}`, `Type must be one of: ${[...VALID_LINK_TYPES].join(', ')}`);
+            }
+            if (!link.path || typeof link.path !== 'string') {
+              addError(relPath, `Invalid knowledge link path at index ${idx}`, 'Path must be a non-empty string referencing a workspace file or web link.');
+            }
+          }
+        });
+      }
     }
 
     // Task 7: Protected Fields mutations safeguards (non-fatal warning)
