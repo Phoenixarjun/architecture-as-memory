@@ -1,0 +1,23 @@
+type: feature
+schema_version: 1
+id: FEAT-AUTHENTICATION
+name: Authentication Feature
+description: Coordinates user login, JWT generation, and secure session management.
+purpose: |
+  Ensures secure credentials validation and cryptographically signed session tokens
+  across frontend and backend interfaces.
+domains:
+  - DOM-FRONTEND
+  - DOM-BACKEND
+components:
+  - COMP-LOGIN
+  - COMP-AUTH-SERVICE
+status:
+  lifecycle: active
+  implementation: complete
+  reliability: reliable
+  observability: complete
+  risk: low
+created_at: '2026-05-27T00:00:00Z'
+updated_at: '2026-05-27T00:00:00Z'
+last_modified_by: developer

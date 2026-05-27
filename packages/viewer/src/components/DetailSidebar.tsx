@@ -59,6 +59,92 @@ export const DetailSidebar = ({ onClose }: { onClose: () => void }) => {
           </div>
         </div>
 
+        {/* Capabilities Section */}
+        {(node as any).capabilities && (node as any).capabilities.length > 0 && (
+          <div className="sidebar-section">
+            <span className="sidebar-section-title">Operational Capabilities</span>
+            <div className="sidebar-card">
+              <ul className="capabilities-list" style={{ margin: 0, paddingLeft: '16px', fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+                {(node as any).capabilities.map((cap: string, i: number) => (
+                  <li key={i} style={{ marginBottom: '4px' }}>{cap}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Knowledge Links Section */}
+        {(node as any).knowledge_links && (node as any).knowledge_links.length > 0 && (
+          <div className="sidebar-section">
+            <span className="sidebar-section-title">Knowledge Links</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {(node as any).knowledge_links.map((link: any, i: number) => (
+                <a
+                  key={i}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="knowledge-link-item"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '12px',
+                    color: '#FFB067',
+                    textDecoration: 'none',
+                    padding: '6px 8px',
+                    borderRadius: '4px',
+                    background: 'rgba(255,176,103,0.04)',
+                    border: '1px solid rgba(255,176,103,0.08)',
+                    transition: 'all 0.2s ease',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                  <span style={{ fontWeight: 600, textTransform: 'uppercase', fontSize: '9px', color: '#FF8A3D', flexShrink: 0 }}>
+                    {link.type}:
+                  </span>
+                  <span style={{ color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {link.path}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Enhancements Section */}
+        {(node as any).enhancements && (node as any).enhancements.length > 0 && (
+          <div className="sidebar-section">
+            <span className="sidebar-section-title">Technical Enhancements</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {(node as any).enhancements.map((enh: any, i: number) => (
+                <div
+                  key={i}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '12px',
+                    padding: '6px 8px',
+                    borderRadius: '4px',
+                    background: 'rgba(255,255,255,0.02)',
+                    borderLeft: '3px solid #D98C3F'
+                  }}
+                >
+                  <span style={{ color: 'var(--text-secondary)' }}>{enh.title}</span>
+                  <span className={`badge badge-priority-${(enh.priority || 'medium').toLowerCase()}`} style={{ fontSize: '9px', textTransform: 'uppercase', padding: '1px 5px' }}>
+                    {enh.priority || 'medium'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Multi-Dimensional States (Features & Components) */}
         {Object.keys(status).length > 0 && (
           <div className="sidebar-section">

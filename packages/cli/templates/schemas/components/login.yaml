@@ -1,0 +1,26 @@
+type: component
+schema_version: 1
+id: COMP-LOGIN
+name: Login UI Component
+description: React-based frontend form that collects credentials and communicates with the backend.
+purpose: |
+  Collects user credentials, provides client-side sanitization,
+  and delegates secure calls to the backend API.
+domain: DOM-FRONTEND
+status:
+  lifecycle: active
+  maturity: production
+  reliability: reliable
+  observability: complete
+  risk: low
+responsibilities:
+  - renders username and password input elements
+  - submits user credentials to the authentication backend API
+  - stores the returned JWT token securely in browser local storage
+capabilities:
+  - handles form inputs and client-side validation
+  - dispatches secure API requests to Backend
+  - caches JWT token and hydrates session store
+created_at: '2026-05-27T00:00:00Z'
+updated_at: '2026-05-27T00:00:00Z'
+last_modified_by: developer

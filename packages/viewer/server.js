@@ -24,69 +24,97 @@ async function parseYamlFile(filePath) {
 }
 
 /**
+ * Helper to recursively search a folder for .yaml/.yml files, ignoring dotfiles.
+ */
+async function getYamlFilesRecursively(dir) {
+  let results = [];
+  if (!(await fs.pathExists(dir))) return results;
+  const list = await fs.readdir(dir);
+  for (const file of list) {
+    if (file.startsWith('.')) continue; // ignore hidden/dotfiles
+    const fullPath = path.join(dir, file);
+    const stat = await fs.stat(fullPath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(await getYamlFilesRecursively(fullPath));
+    } else if (file.endsWith('.yaml') || file.endsWith('.yml')) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
+
+/**
  * Aggregates all YAML files in the architecture directory into a single hydrated JSON state.
- * Supports "Cognitive Auto-Hydration" (auto-discovers orphaned files).
+ * Implements a fully dynamic discovery and schema-driven loading process.
  */
 export async function getHydratedArchitecture(archDir) {
-  const indexPath = path.join(archDir, 'architecture.index.yaml');
-  const index = await parseYamlFile(indexPath) || {};
+  const yamlFiles = await getYamlFilesRecursively(archDir);
+  
+  let system = null;
+  const domains = [];
+  const features = [];
+  const components = [];
+  const enhancements = [];
+  let relationships = [];
+  
+  const idMap = new Map();
 
-  // 1. Parse system metadata
-  const systemPath = path.join(archDir, index.system || 'system.yaml');
-  const system = await parseYamlFile(systemPath) || { id: 'SYS-AAM', name: 'AAM Project', description: 'System metadata missing.' };
+  for (const filePath of yamlFiles) {
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+      const parsed = YAML.parse(content);
+      if (!parsed || typeof parsed !== 'object') continue;
+      
+      const relPath = path.relative(archDir, filePath).replace(/\\/g, '/');
+      parsed._relPath = relPath;
 
-  // Helper to safely load lists from both index mapping and filesystem discovery
-  async function loadCategoryNodes(categoryName, subfolder) {
-    const list = index[categoryName] || [];
-    const nodesMap = new Map();
-
-    // Load indexed items first
-    for (const item of list) {
-      if (item.path) {
-        const fullPath = path.join(archDir, item.path);
-        const parsed = await parseYamlFile(fullPath);
-        if (parsed) {
-          nodesMap.set(parsed.id || item.id, parsed);
-        }
+      // Extract relationships if present
+      if (Array.isArray(parsed.relationships)) {
+        relationships = [...relationships, ...parsed.relationships];
       }
-    }
 
-    // Auto-discover orphaned or newly added files in subfolders (Cognitive Auto-Hydration)
-    const categoryDir = path.join(archDir, subfolder);
-    if (await fs.pathExists(categoryDir)) {
-      const files = await fs.readdir(categoryDir);
-      for (const file of files) {
-        if (file.endsWith('.yaml') || file.endsWith('.yml')) {
-          const fullPath = path.join(categoryDir, file);
-          const parsed = await parseYamlFile(fullPath);
-          if (parsed && parsed.id && !nodesMap.has(parsed.id)) {
-            nodesMap.set(parsed.id, parsed);
-          }
-        }
+      const id = parsed.id;
+      const type = parsed.type;
+
+      if (type === 'system') {
+        system = parsed;
+        continue;
       }
-    }
 
-    return Array.from(nodesMap.values());
+      if (id && type) {
+        if (idMap.has(id)) {
+          console.warn(chalk.yellow(`[AAM Discovery] Duplicate ID '${id}' detected in ${relPath}. First defined in ${idMap.get(id)}`));
+          continue;
+        }
+        idMap.set(id, relPath);
+
+        if (type === 'domain') {
+          domains.push(parsed);
+        } else if (type === 'feature') {
+          features.push(parsed);
+        } else if (type === 'component') {
+          components.push(parsed);
+        } else if (type === 'enhancement') {
+          enhancements.push(parsed);
+        }
+      } else if (id && id.startsWith('SYS-')) {
+        system = parsed;
+      }
+    } catch (err) {
+      // Isolate malformed YAML files gracefully to maintain runtime resilience (Task 15)
+      console.error(chalk.red(`[AAM Discovery] Gracefully isolated malformed file at ${filePath}: ${err.message}`));
+    }
   }
 
-  // 2. Load Domains, Features, Components, Enhancements
-  const [domains, features, components, enhancements] = await Promise.all([
-    loadCategoryNodes('domains', 'domains'),
-    loadCategoryNodes('features', 'features'),
-    loadCategoryNodes('components', 'components'),
-    loadCategoryNodes('enhancements', 'enhancements')
-  ]);
-
-  // 3. Load global relationships
-  const relPath = path.join(archDir, index.relationships || 'relationships.yaml');
-  const rawRels = await parseYamlFile(relPath) || {};
-  let relationships = rawRels.relationships || [];
-
-  // Also collect local relationships defined inside feature nodes
-  for (const feature of features) {
-    if (Array.isArray(feature.relationships)) {
-      relationships = [...relationships, ...feature.relationships];
-    }
+  // Fallback defaults if no system node was discovered
+  if (!system) {
+    system = {
+      id: 'SYS-AAM',
+      type: 'system',
+      schema_version: 1,
+      name: 'Dynamic Architecture-as-Memory',
+      description: 'Dynamic local system node initialized recursively.'
+    };
   }
 
   return {
