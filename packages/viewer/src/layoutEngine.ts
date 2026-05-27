@@ -132,6 +132,60 @@ export function computeGraphLayout({
       });
     }
     
+    // Transitive Expansion Pass to keep child components and parents bright
+    const initialIds = Array.from(neighborhood);
+    initialIds.forEach(id => {
+      // 1. If a feature is in the neighborhood, add all of its child components and domains
+      const f = features.find(featNode => featNode.id === id);
+      if (f) {
+        if (Array.isArray(f.components)) {
+          f.components.forEach(cId => neighborhood.add(cId));
+        }
+        components.forEach(c => {
+          const belongsToFeat = (Array.isArray(c.features) && c.features.includes(f.id)) || (c.feature === f.id);
+          if (belongsToFeat) {
+            neighborhood.add(c.id);
+          }
+        });
+        if (Array.isArray(f.domains)) {
+          f.domains.forEach(dId => neighborhood.add(dId));
+        } else if (f.domain) {
+          neighborhood.add(f.domain);
+        }
+      }
+
+      // 2. If a component is in the neighborhood, add its parent features and domain
+      const cNode = components.find(compNode => compNode.id === id);
+      if (cNode) {
+        features.forEach(featNode => {
+          const includesComp = (Array.isArray(featNode.components) && featNode.components.includes(cNode.id)) || 
+                               (Array.isArray(cNode.features) && cNode.features.includes(featNode.id)) ||
+                               (cNode.feature === featNode.id);
+          if (includesComp) {
+            neighborhood.add(featNode.id);
+          }
+        });
+        if (cNode.domain) neighborhood.add(cNode.domain);
+      }
+
+      // 3. If a domain is in the neighborhood, add all of its features and components
+      const dNode = domains.find(domNode => domNode.id === id);
+      if (dNode) {
+        features.forEach(featNode => {
+          const belongsToDom = (Array.isArray(featNode.domains) && featNode.domains.includes(dNode.id)) || (featNode.domain === dNode.id);
+          if (belongsToDom) {
+            neighborhood.add(featNode.id);
+            components.forEach(c => {
+              const belongsToFeat = (Array.isArray(c.features) && c.features.includes(featNode.id)) || (c.feature === featNode.id);
+              if (belongsToFeat) {
+                neighborhood.add(c.id);
+              }
+            });
+          }
+        });
+      }
+    });
+
     return neighborhood;
   };
 
@@ -297,8 +351,8 @@ export function computeGraphLayout({
 
         if (isFeatExpanded) {
           featComponents.forEach((comp, compIdx) => {
-            const compX = featX + 340; // Bounded tight corridor spacing
-            const compY = featY - 40 + compIdx * 140; // Tight localized cluster
+            const compX = featX + 285; // Closer to the parent horizontally
+            const compY = featY - 10 + compIdx * 125; // Perfectly spaced vertical layout
             visibleNodeIds.add(comp.id);
 
             const isCompPrioritized = isNodePrioritized(comp.id, 'componentNode', comp);
@@ -355,7 +409,7 @@ export function computeGraphLayout({
         });
 
         // Dynamic coordinate summation to completely prevent features overlapping (Task 6)
-        const clusterHeight = isFeatExpanded ? Math.max(1, featComponents.length) * 140 : 160;
+        const clusterHeight = isFeatExpanded ? Math.max(1, featComponents.length) * 125 : 160;
         featY += clusterHeight + 80; // Sibling normalized spacing + gap
       });
     }

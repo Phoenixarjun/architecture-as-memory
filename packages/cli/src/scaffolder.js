@@ -166,6 +166,6 @@ ${markerEnd}\n`;
   console.log(chalk.white('To start the local visual viewer, run:'));
   console.log(chalk.bold.cyan('  npx @architecture-as-memory/aam dev'));
   console.log(chalk.white('\nOr install locally in your project to use shorter commands:'));
-  console.log(chalk.bold.cyan('  npm install -D @architecture-as-memory/aam@beta'));
+  console.log(chalk.bold.cyan('  npm install -D @architecture-as-memory/aam'));
   console.log(chalk.white('  npx aam dev\n'));
 }
