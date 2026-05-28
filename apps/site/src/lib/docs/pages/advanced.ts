@@ -80,19 +80,50 @@ components:
     title: 'AI Agent Integrations',
     description: 'How to interface AAM with Claude Code, Cursor, Gemini CLI, and Codex.',
     blocks: [
-      { type: 'h1', content: 'AI Assistant Orchestration' },
-      { type: 'p', content: 'AAM aligns with your AI developer tools by injectively binding lightweight bootstrap references directly into active rule files.' },
-      { type: 'h2', content: 'How it works' },
-      { type: 'p', content: 'During `aam init`, the engine scans up to depth 3 for instruction targets like `CLAUDE.md`, `.cursorrules`, or `AGENT.md`. It appends a clean, marker-guarded prompt directing the assistant to respect architectural YAML boundaries.' },
+      { type: 'h1', content: 'AI Assistant Orchestration & Reinforcement' },
+      { type: 'p', content: 'AAM protects repositories against architectural erosion by implementing a multi-layered cognition reinforcement pipeline. Rather than force-feeding an LLM the entire codebase, AAM structures developer intent across four modular layers.' },
+      { type: 'h2', content: 'The 4 Cognitive Reinforcement Layers' },
+      
+      { type: 'p', content: '**Layer 1: Persistent Target Detection (Idempotent Anchors)**' },
+      { type: 'p', content: 'During AAM initialization (`aam init`), the scaffolder scans the root workspace up to a depth of 3 for active AI provider instructions. It safely appends a non-invasive, lightweight cognition marker referencing AAM into: `CLAUDE.md`, `.gemini/GEMINI.md`, `.cursorrules`, `.github/copilot-instructions.md`, and `AGENT.md` (as well as detecting `.claude/`, `.cursor/`, and `.gemini/` directories).' },
       {
         type: 'code',
         language: 'markdown',
-        content: `<!-- AAM START -->
-This repository uses Architecture-as-Memory (AAM).
-Before implementing features:
-  - Read /architecture/architecture.index.yaml
-  - Respect defined component boundaries.
-<!-- AAM END -->`
+        content: `<!-- AAM REINFORCEMENT START -->
+## Architecture-As-Memory (AAM) Cognition Anchor
+This repository uses AAM to persist architectural intent and prevent cognitive drift.
+- Read /architecture/agents/aam-skill.md to align with active system topology.
+- Maintain stable IDs (FNV-1a) and avoid global graph regeneration.
+- Run \`aam validate\` / \`aam doctor\` after making changes to verify ontology.
+- Already-running AI session? Reload cognition by manually reading the AAM skill file.
+<!-- AAM REINFORCEMENT END -->`
+      },
+
+      { type: 'p', content: '**Layer 2: Slash Command Context Protocol (On-Demand Hydration)**' },
+      { type: 'p', content: 'To keep context windows lightweight and cost-efficient, AAM supports selective context hydration. When prompting your assistant, use the slash command trigger followed by the target capability:' },
+      {
+        type: 'code',
+        language: 'bash',
+        content: `/aam FEAT-AUTHENTICATION Add password reset support via SMTP.`
+      },
+      { type: 'p', content: 'This immediately injects only the related YAML files (domains, features, and components) matching that specific capability, bypassing irrelevant code files and preventing cognitive overload.' },
+
+      { type: 'p', content: '**Layer 3: Local-First Non-Destructive Hooks (Verify on Tasks)**' },
+      { type: 'p', content: 'AAM registers Git post-commit hooks and post-task instruction hooks. For instance, running `aam hooks install claude` registers a post-task verification hook. Before any changes are committed or after an AI task completes, the engine runs `aam validate` and `aam doctor` in the background, rendering a clear visual warning report to the developer if a mutation breaks architectural boundaries.' },
+
+      { type: 'p', content: '**Layer 4: CLI Success Reinforcement Alert (Live Session Recovery)**' },
+      { type: 'p', content: 'Already running an active AI chat session when installing AAM? To reactivate architectural context instantly, the CLI outputs a concise 2-line recovery nudge encouraging the engineer to ask the running agent to read \`/architecture/agents/aam-skill.md\` manually. This forces the active LLM context window to instantly align with AAM schemas.' },
+      
+      { type: 'h2', content: 'Injecting Reinforcement Manually' },
+      { type: 'p', content: 'You can manually inject the AAM cognition anchors at any time for specific platforms:' },
+      {
+        type: 'code',
+        language: 'bash',
+        content: `# Reinforce AAM rules for Claude Code and Claude Desktop
+npx @architecture-as-memory/aam reinforce claude
+
+# Reinforce rules for Gemini Workspace
+npx @architecture-as-memory/aam reinforce gemini`
       }
     ]
   },

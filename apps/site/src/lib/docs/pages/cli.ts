@@ -35,6 +35,12 @@ System Cognition Status:
 🎉 Schema validation passed with 0 errors!`
       },
       {
+        type: 'warning',
+        title: 'Malformed Cognition & Agent Conflicts',
+        content: 'During heavy multi-agent iterations, lower-level AI models (such as OpenCode or sub-agent threads) may mutate yaml schemas incorrectly, producing errors like: **"malformed cognition error: map key must be unique at line 6"**. Run `aam validate` to instantly isolate the malformed file, the exact line number, and structural error locations so you can rectify it before committing.',
+        accent: 'critical'
+      },
+      {
         type: 'command',
         title: 'aam doctor',
         content: 'npx @architecture-as-memory/aam doctor',
@@ -78,6 +84,23 @@ MISSING KNOWLEDGE LINK:
   ✓ Wrote standalone offline visualizer html: architecture-map.html
 
 🎉 Static dashboard successfully created! Open in any browser.`
+      },
+      {
+        type: 'command',
+        title: 'aam reinforce',
+        content: 'npx @architecture-as-memory/aam reinforce claude',
+        expectedOutput: `Reinforcing AAM cognition context for Claude Code / Claude Desktop...
+  ✓ Successfully reinforced AAM reference in CLAUDE.md
+
+🎉 Reinforcement completed!
+To reactivate context in an already-running AI session, ask the AI:
+  "Please read the AAM skill file /architecture/agents/aam-skill.md"`
+      },
+      {
+        type: 'callout',
+        title: 'Idempotent Reinforcement Options',
+        content: 'The `aam reinforce <provider>` command appends a lightweight, non-invasive cognition anchor reference into target configuration files. Supported providers include: `claude` (CLAUDE.md), `gemini` (.gemini/GEMINI.md), `cursor` (.cursorrules), `codex` (.github/copilot-instructions.md), and `generic` (AGENT.md). Running it multiple times is perfectly safe and will not result in duplicate prompts.',
+        accent: 'ember'
       }
     ]
   }
