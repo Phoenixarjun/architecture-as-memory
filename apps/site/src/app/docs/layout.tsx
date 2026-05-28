@@ -15,16 +15,27 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  // Reading progress indicator hook
+  // Reading progress indicator hook (Throttled with requestAnimationFrame for 60fps performance)
   useEffect(() => {
+    let frameId: number;
     const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.scrollY / totalScroll) * 100);
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+      frameId = requestAnimationFrame(() => {
+        const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalScroll > 0) {
+          setScrollProgress((window.scrollY / totalScroll) * 100);
+        }
+      });
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frameId) {
+        cancelAnimationFrame(frameId);
       }
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (

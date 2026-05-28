@@ -85,3 +85,28 @@ body {
 .radial-glow-ember {
   background: radial-gradient(circle at center, rgba(255, 138, 61, 0.08) 0%, transparent 70%);
 }
+
+/* GPU hardware-accelerated compositor animations for heavy background blurs */
+@keyframes driftA {
+  0% { transform: translate3d(0, 0, 0) translate(-50%, -50%); }
+  33% { transform: translate3d(40px, -30px, 0) translate(-50%, -50%); }
+  66% { transform: translate3d(-20px, 20px, 0) translate(-50%, -50%); }
+  100% { transform: translate3d(0, 0, 0) translate(-50%, -50%); }
+}
+
+@keyframes driftB {
+  0% { transform: translate3d(0, 0, 0) translate(50%, 50%); }
+  33% { transform: translate3d(-30px, 40px, 0) translate(50%, 50%); }
+  66% { transform: translate3d(50px, -30px, 0) translate(50%, 50%); }
+  100% { transform: translate3d(0, 0, 0) translate(50%, 50%); }
+}
+
+.animate-drift-a {
+  animation: driftA 25s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-drift-b {
+  animation: driftB 30s ease-in-out infinite;
+  will-change: transform;
+}
