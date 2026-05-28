@@ -56,7 +56,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           <span>DOCS MENU</span>
         </button>
         <span className="font-mono text-[9px] uppercase tracking-wider text-brand-ember bg-brand-surface-dark px-2 py-0.5 rounded border border-white/5">
-          v1.0.1
+          v1.0.3
         </span>
       </div>
 

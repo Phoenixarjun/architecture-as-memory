@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarNavigation } from "@/lib/docs/data";
+import { DocsSearch } from "./DocsSearch";
 
 interface DocsSidebarProps {
   onLinkClick?: () => void;
@@ -14,16 +15,12 @@ export function DocsSidebar({ onLinkClick }: DocsSidebarProps) {
 
   return (
     <aside className="w-full flex flex-col gap-8 pr-4">
-      {/* Search placeholder */}
+      {/* 1. Fully-functional Command Palette Search */}
       <div className="relative w-full">
-        <input
-          type="text"
-          placeholder="Fuzzy Search docs (Ctrl+K)..."
-          disabled
-          className="w-full bg-brand-surface-dark border border-white/5 rounded px-3 py-1.5 text-xs text-white/30 placeholder-white/20 focus:outline-none cursor-not-allowed font-sans"
-        />
+        <DocsSearch />
       </div>
 
+      {/* 2. Structured Category Navigation List */}
       <nav className="flex flex-col gap-6">
         {sidebarNavigation.map((cat, idx) => (
           <div key={idx} className="flex flex-col gap-2">
