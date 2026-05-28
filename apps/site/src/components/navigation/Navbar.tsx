@@ -87,7 +87,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded bg-brand-surface-dark border border-white/5 font-mono text-[10px] text-brand-ember uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-ember animate-ping shrink-0" />
-            <span>v1.0.3</span>
+            <span>v1.0.4</span>
           </div>
 
           {/* Hamburger Menu Icon */}
@@ -203,7 +203,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-1.5 px-3 py-2 rounded bg-brand-surface-dark border border-white/5 font-mono text-xs text-brand-ember uppercase self-start">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-ember animate-ping shrink-0" />
-            <span>v1.0.3 Latest</span>
+            <span>v1.0.4 Latest</span>
           </div>
         </div>
       )}
