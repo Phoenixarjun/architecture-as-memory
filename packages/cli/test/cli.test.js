@@ -74,3 +74,38 @@ purpose: Presentation separation.
     await fs.remove(tempTestDir);
   }
 });
+
+test('Provider Reinforcement', async (t) => {
+  const tempTestDir = path.resolve('./temp-reinforce-test');
+  
+  try {
+    await fs.remove(tempTestDir);
+    await fs.ensureDir(tempTestDir);
+
+    const { reinforceProvider } = await import('../src/reinforcement-engine.js');
+
+    // 1. Reinforce Claude (should create CLAUDE.md)
+    await reinforceProvider('claude', tempTestDir);
+    const claudePath = path.join(tempTestDir, 'CLAUDE.md');
+    assert.ok(await fs.pathExists(claudePath), 'CLAUDE.md should exist');
+    
+    let content = await fs.readFile(claudePath, 'utf8');
+    assert.ok(content.includes('<!-- AAM REINFORCEMENT START -->'), 'Should contain reinforcement start marker');
+    assert.ok(content.includes('Architecture-As-Memory (AAM) Cognition Anchor'), 'Should contain cognition header');
+
+    // 2. Reinforce Gemini (should create .gemini/GEMINI.md)
+    await reinforceProvider('gemini', tempTestDir);
+    const geminiPath = path.join(tempTestDir, '.gemini/GEMINI.md');
+    assert.ok(await fs.pathExists(geminiPath), '.gemini/GEMINI.md should exist');
+    
+    // 3. Reinforce idempotent behavior (should not append twice)
+    const initialSize = (await fs.stat(claudePath)).size;
+    await reinforceProvider('claude', tempTestDir);
+    const postSize = (await fs.stat(claudePath)).size;
+    assert.strictEqual(initialSize, postSize, 'Size should remain identical for idempotent call');
+
+  } finally {
+    await fs.remove(tempTestDir);
+  }
+});
+

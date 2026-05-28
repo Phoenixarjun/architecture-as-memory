@@ -162,10 +162,6 @@ ${markerEnd}\n`;
     }
   }
 
-  console.log(chalk.bold.green('\n🎉 Architecture-As-Memory successfully initialized!'));
-  console.log(chalk.white('To start the local visual viewer, run:'));
-  console.log(chalk.bold.cyan('  npx @architecture-as-memory/aam dev'));
-  console.log(chalk.white('\nOr install locally in your project to use shorter commands:'));
-  console.log(chalk.bold.cyan('  npm install -D @architecture-as-memory/aam'));
-  console.log(chalk.white('  npx aam dev\n'));
+  console.log(chalk.bold.green('🎉 AAM has been successfully initialized.'));
+  console.log(chalk.cyan('Read the AAM skill/slash commands/hooks and reinforce them into your provider workflow/config so architectural cognition persists across sessions.\n'));
 }

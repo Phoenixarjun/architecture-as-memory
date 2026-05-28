@@ -35,6 +35,19 @@ AAM employs a fully recursive, dynamic node discovery system. Node categorizatio
 
 ---
 
+## 2B. Mid-Project Onboarding Protocol
+
+If the codebase already exists and no `/architecture` nodes are present:
+1. **Do NOT read all files.** Identify entry points only: root config files, 
+   package manifests, main service bootstraps.
+2. Infer top-level Domains first. Write Domain YAMLs before touching Features.
+3. Fan out one Domain at a time. Read only the files relevant to that Domain.
+4. Write Feature + Component YAMLs per Domain incrementally.
+5. Defer all `relationships.yaml` entries until all nodes exist.
+6. Run `aam validate` after completing each Domain, not at the end.
+
+---
+
 ## 3. Deterministic ID Strategy (FNV-1a Suffixes)
 
 To prevent ID collisions and maintain clean, stable visual graph nodes, you must generate IDs using the deterministic FNV-1a 32-bit hashing strategy of the normalized entity name:
@@ -149,3 +162,5 @@ To protect this living system from entropy under continuous AI mutations, you mu
 7. **Eliminate Relationship Spam**: Only document structural, core-level dependency relationships. Do not map every low-level utility import. Keep the topology understandable.
 8. **Protected Fields Integrity**: Respect nodes declaring `protected_fields`. Do not mutate protected properties without explicitly aligning with baseline commits.
 9. **Primary Orchestration Agent Only**: Sub-agents may analyze implementation details but must never mutate architecture cognition directly. Only the primary orchestration agent may write or update architecture YAML nodes. This prevents ontology fragmentation, duplicate mutations, and topology corruption across multi-agent runtimes (such as Claude Code sub-agents, Gemini multi-agent workflows, OpenCode task agents, or Codex runtimes).
+10. **Think Before Writing**: Before creating or mutating any node, state in a comment what you believe the relationship or capability is AND why. If uncertain, halt and ask — do not hallucinate a relationship to fill a gap.
+11. **Surgical Writes Only**: Mutate the minimum nodes required. Do not "improve" adjacent nodes while updating a target node.

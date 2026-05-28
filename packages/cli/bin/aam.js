@@ -15,6 +15,7 @@ import { getHeartbeat } from '../src/status-engine.js';
 import { runHashCommand } from '../src/hash-engine.js';
 import { runSnapshotCommand } from '../src/snapshot-engine.js';
 import { getUnifiedHealthReport } from '../src/health-engine.js';
+import { reinforceProvider } from '../src/reinforcement-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -149,6 +150,18 @@ program
       await installClaudeHook(process.cwd());
     } catch (error) {
       console.error(chalk.red(`\nHook installation crashed: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('reinforce <provider>')
+  .description('Reinforce AAM architectural context into a specific AI provider workflow (claude, gemini, codex, cursor, generic).')
+  .action(async (provider) => {
+    try {
+      await reinforceProvider(provider, process.cwd());
+    } catch (error) {
+      console.error(chalk.red(`\nReinforcement failed: ${error.message}`));
       process.exit(1);
     }
   });
