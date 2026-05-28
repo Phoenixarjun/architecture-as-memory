@@ -64,6 +64,9 @@ async function getWatcherServerPath() {
   throw new Error(errorMessage);
 }
 
+const pkg = fs.readJsonSync(path.resolve(__dirname, '../package.json'));
+const version = pkg.version;
+
 const banner = chalk.bold.rgb(255, 138, 61)(`
     ___    ___    ___  ___ 
    /   |  /   |  /   |/   |
@@ -71,12 +74,12 @@ const banner = chalk.bold.rgb(255, 138, 61)(`
  / ___ |/ ___ |/ / |  / | |
 /_/  |_/_/  |_/_/  |_/  |_|
 `);
-const subtitle = chalk.bold.gray(`  ARCHITECTURE-AS-MEMORY (AAM) v1.0.0\n`);
+const subtitle = chalk.bold.gray(`  ARCHITECTURE-AS-MEMORY (AAM) v${version}\n`);
 
 program
   .name('aam')
   .description('Architecture-As-Memory: Living cognitive architecture maps for AI coding assistants.')
-  .version('1.0.0')
+  .version(version)
   .addHelpText('before', banner + subtitle);
 
 export function showAamBanner() {
