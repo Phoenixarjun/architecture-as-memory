@@ -5,5 +5,8 @@ edition = "2021"
 description = "Living cognitive architecture maps for AI coding assistants (Rust Binary Wrapper)."
 license = "MIT"
 authors = ["Naresh B A"]
+readme = "README.md"
+homepage = "https://github.com/Phoenixarjun/architecture-as-memory"
+repository = "https://github.com/Phoenixarjun/architecture-as-memory"
 
 [dependencies]
