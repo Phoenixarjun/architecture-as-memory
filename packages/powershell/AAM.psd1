@@ -1,6 +1,6 @@
 # AAM PowerShell Module Manifest
 @{
-    ModuleVersion = '1.0.3'
+    ModuleVersion = '1.0.4'
     GUID          = 'a5f27c3e-f1b2-4d56-bc92-3a8309a473ee'
     Author        = 'Naresh B A'
     Description   = 'Living cognitive architecture maps for AI coding assistants (PowerShell Module Wrapper).'
