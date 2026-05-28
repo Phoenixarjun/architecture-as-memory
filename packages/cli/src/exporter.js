@@ -4,6 +4,10 @@ import chalk from 'chalk';
 import YAML from 'yaml';
 import { getArchitectureHash } from './hash-engine.js';
 import { computeComplexityScore } from './doctor-engine.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Helper to recursively search a folder for .yaml/.yml files, ignoring dotfiles.
@@ -115,6 +119,24 @@ export async function exportArchitecture(targetDir = process.cwd(), outputFilena
   // Calculate dynamic deterministic hash
   const hash = await getArchitectureHash(targetDir);
 
+  // Load local AAM logo as Base64 for fully offline self-contained HTML
+  let logoBase64 = '';
+  const possibleLogoPaths = [
+    path.resolve(__dirname, '../viewer/dist/AAMLogo.png'),
+    path.resolve(__dirname, '../../viewer/dist/AAMLogo.png'),
+    path.resolve(__dirname, '../viewer/AAMLogo.png'),
+    path.resolve(targetDir, 'packages/viewer/public/AAMLogo.png'),
+    path.resolve(targetDir, 'apps/site/public/AAMLogo.png')
+  ];
+
+  for (const logoPath of possibleLogoPaths) {
+    if (await fs.pathExists(logoPath)) {
+      const logoBuf = await fs.readFile(logoPath);
+      logoBase64 = `data:image/png;base64,${logoBuf.toString('base64')}`;
+      break;
+    }
+  }
+
   // Compute complexity point metrics dynamically for nodes (Task 9 & 11)
   const allNodesList = [...domains, ...features, ...components];
   allNodesList.forEach(node => {
@@ -209,7 +231,7 @@ export async function exportArchitecture(targetDir = process.cwd(), outputFilena
   <header class="h-16 shrink-0 glass flex items-center justify-between px-6 z-20">
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-2">
-        <div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand to-yellow-500 flex items-center justify-center font-bold text-white shadow-lg">M</div>
+        ${logoBase64 ? `<img src="${logoBase64}" class="h-8 w-8 rounded-lg object-contain shadow-lg bg-white/5 p-0.5 border border-white/10" alt="AAM Logo" />` : `<div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand to-yellow-500 flex items-center justify-center font-bold text-white shadow-lg">M</div>`}
         <div>
           <h1 class="text-sm font-semibold tracking-wider text-white">ARCHITECTURE-AS-MEMORY</h1>
           <span class="text-[10px] text-brand tracking-widest font-mono uppercase font-bold">SHA: ${hash.substring(0, 8)}</span>
@@ -473,7 +495,13 @@ export async function exportArchitecture(targetDir = process.cwd(), outputFilena
           to: rel.target,
           arrows: 'to',
           label: rel.description || rel.type,
-          font: { size: 9, color: '#9CA3AF', face: 'JetBrains Mono' },
+          font: { 
+            size: 9, 
+            color: '#A3A9B6', 
+            face: 'Outfit',
+            strokeWidth: 3,
+            strokeColor: '#0B0D11'
+          },
           color: { color: '#FF8A3D', opacity: isDim ? 0.1 : 0.7 },
           width: 1.5
         });

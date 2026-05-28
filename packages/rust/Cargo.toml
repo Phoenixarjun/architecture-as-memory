@@ -1,6 +1,6 @@
 [package]
 name = "aam-cli"
-version = "1.0.2"
+version = "1.0.3"
 edition = "2021"
 description = "Living cognitive architecture maps for AI coding assistants (Rust Binary Wrapper)."
 license = "MIT"
